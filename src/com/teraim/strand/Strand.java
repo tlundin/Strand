@@ -20,6 +20,8 @@ public class Strand {
 	
 	//Root for the data objects storing data per provyta.
 	public final static String DATA_ROOT_DIR = path+"/strand/data/";
+
+	public static final String PY_PARCEL_KEY = "py_object";
 	
 	
 }

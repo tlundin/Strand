@@ -1,21 +1,14 @@
 package com.teraim.strand;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
-import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -23,6 +16,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -37,19 +32,31 @@ import com.teraim.strand.dataobjekt.StrandInputData.Entry;
  */
 public class MainActivity extends Activity {
 
+	private Button create,edit,delete;
+	private LinearLayout buttonRow;
+	private Activity mother;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		mother = this;
 		//Check if I am running for the first time. If so, perform initial init.
 		initIfFirstTime();
 		//Load the input data.
 		//For now, load from resources.
 		InputStream is = getResources().openRawResource(R.raw.data);
 		assert(is !=null);
+		create=new Button(this);edit=new Button(this);delete=new Button(this);
+		create.setText("Börja ny inmatning");
+		edit.setText("Gör ändringar");
+		delete.setText("Ta bort och börja om");
 		//This call will parse the input file and create a singleton data object that can be used.
 		StrandInputData.parseInputFile(is);
+		 
+		//Buttonrow.
+		buttonRow = (LinearLayout)this.findViewById(R.id.buttons);
 
 		//fill spinners with Ruta and Provyta IDs.		
 		 Spinner rutSpinner = (Spinner)this.findViewById(R.id.spinner1);
@@ -72,8 +79,10 @@ public class MainActivity extends Activity {
 		 rutSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			    @Override
 			    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-			        if (position!=0)
+		    		buttonRow.setVisibility(View.INVISIBLE);
+			        if (position!=0) {
 			        	showProvyteSpinner(spinnerArray.get(position));
+			        }
 			    }
 
 	
@@ -85,7 +94,7 @@ public class MainActivity extends Activity {
 			});
 	}
 
-    private void showProvyteSpinner(String selectedRuta) {		
+    private void showProvyteSpinner(final String selectedRuta) {		
     	//TODO: IF ONLY ONE PROVYTA, no selection required.
     	
 		//fill spinners with Ruta and Provyta IDs.		
@@ -95,7 +104,7 @@ public class MainActivity extends Activity {
 
 		 tv.setVisibility(View.VISIBLE);
 		 ytSpinner.setVisibility(View.VISIBLE);
-		 List<String> provyteArray = new ArrayList<String>();
+		 final List<String> provyteArray = new ArrayList<String>();
 		 List<Entry> es = StrandInputData.getEntries();
 		 //Lägg till alla provytor för den valda rutan.
 		 for (Entry e:es) 
@@ -104,6 +113,49 @@ public class MainActivity extends Activity {
 		 //Then, create an adaptor and link to the array.
 		 ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, provyteArray);
 		 ytSpinner.setAdapter(spinnerArrayAdapter);
+		 
+		 ytSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+			    @Override
+			    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+			        String selectedYta = provyteArray.get(position);
+			        List<Entry> es = StrandInputData.getEntries();
+		    		buttonRow.removeAllViews();
+			        for(Entry e:es) {
+			        	if (e.getRuta().equals(selectedRuta) &&
+			        			e.getProvyta().equals(selectedYta)) {
+			        		String pyID = e.getPyid();
+			        		Log.d("Strand","We have a winner. PyID is: "+pyID);
+			        		//We now have the  PyID. Fetch the object (if any) from persistent storage.		        		
+			        		Provyta py = Persistent.onLoad(pyID);
+			        		
+			        		//If object already exist, offer Edit button. Else, offer Create
+			        		if (py !=null) {
+			        			buttonRow.addView(edit);
+			        			buttonRow.addView(delete);
+			        			//Serialize and store to input activity.
+			        			Bundle b = new Bundle();
+			        			b.putSerializable(Strand.PY_PARCEL_KEY, py);
+			        			Intent i = new Intent();
+			        			i.putExtras(b);
+			        			i.setClass(mother, ActivityMainInput.class);
+			        			startActivity(i);
+			        		}
+			        		else
+			        			buttonRow.addView(create);
+			        		buttonRow.setVisibility(View.VISIBLE);
+			        	}
+			        		
+			        	
+			        }
+			    }
+
+	
+				@Override
+			    public void onNothingSelected(AdapterView<?> parentView) {
+			        // Gör inget
+			    }
+
+			});
 		 
     }
 
@@ -138,83 +190,9 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	public void onSave (View v) {
-		Log.d("Strand","Save");
-		
-		Provyta py = new Provyta();
-		// Write to disk with FileOutputStream
-		FileOutputStream f_out=null;
-		try {
-			f_out = new 
-				FileOutputStream(Strand.DATA_ROOT_DIR +"myobject.data");
-		} catch (FileNotFoundException e) {
-			//Most likely get here if the folder is missing. Try this..
-				e.printStackTrace();
-			}
 
-		// Write object with ObjectOutputStream
-		ObjectOutputStream obj_out = null;
-		try {
-			obj_out = new
-				ObjectOutputStream (f_out);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// Write object out to disk
-		try {
-			obj_out.writeObject ( py );
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	
-	public void onLoad (View v) {
-		Log.d("Strand","Load");
-		// Read from disk using FileInputStream
-		FileInputStream f_in = null;
-		try {
-			f_in = new 
-				FileInputStream(Strand.DATA_ROOT_DIR+"myobject.data");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
-		// Read object using ObjectInputStream
-		ObjectInputStream obj_in = null;
-		try {
-			obj_in = new ObjectInputStream (f_in);
-		} catch (StreamCorruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// Read an object
-		Object obj = null;
-		try {
-			obj = obj_in.readObject();
-		} catch (OptionalDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		if (obj instanceof Provyta)
-		{
-			Provyta py = (Provyta) obj;
-		}
-	}
 	
 	
 }
