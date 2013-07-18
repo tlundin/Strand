@@ -20,13 +20,15 @@ import android.util.Log;
 public class StrandInputData {
 	
 	private static List<Entry> myTable = new ArrayList<Entry>();
-	private final static int ColumnCount = 12;	
+	private final static int ColumnCount = 16;	
 	//internal row counter used for error message.
-	private static int x = 0;
 
 	
 	//Fetches and parses the input file data. For now, this is stored as a dev. file.
 	public static boolean parseInputFile(InputStream is) {
+		//If already parsed, don't do it again..
+		if (myTable.size()!=0) 
+			return true;
 		 BufferedReader bufferreader = new BufferedReader(new
 		            InputStreamReader(is));
 		    String bufferLine;
@@ -43,6 +45,7 @@ public class StrandInputData {
 	
 	//Separate columns by ","
 	private static void addRow(String row) {
+		int x=0;
 		assert(row!=null);
 		String[] c = row.split(",");
 		//TODO: Add lat, long

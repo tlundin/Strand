@@ -8,7 +8,7 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Strand V 0.1"
+        android:text="Strand V 0.2"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -25,48 +25,31 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/et1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="number"
         android:minWidth="90dp" >
-      </EditText>  
-
-    <TextView
-        android:id="@+id/in_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Inventerare:"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number"
-        android:minWidth="90dp" > 
     </EditText>
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:text="Datum:"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <EditText
-        android:id="@+id/editText3"
+    <DatePicker
+        android:id="@+id/et2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="date" >
+        android:layout_height="wrap_content" />
 
-        <requestFocus />
-    </EditText>
 
-      <TextView
+        
+
+    <TextView
         android:id="@+id/in_4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -74,30 +57,15 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/et3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="number"
-        android:minWidth="90dp" > 
-    </EditText>  
-  
-    <TextView
-        android:id="@+id/in_5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Orsak:"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:minWidth="90dp" >
+    </EditText>
 
-    <EditText
-        android:id="@+id/editText5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number"
-        android:minWidth="90dp" > 
-    </EditText> 
-      <TextView
+    <TextView
         android:id="@+id/in_6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -105,11 +73,30 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
-        android:id="@+id/editText6"
+        android:id="@+id/et4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="number"
-        android:minWidth="90dp" > 
-    </EditText>     
+        android:minWidth="90dp" >
+    </EditText>
+
+    <CheckBox
+        android:id="@+id/lock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Lås denna provyta (inga fler inmatningar tillåtna)" />
+
+    <Button
+        android:id="@+id/textmessage"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:onClick="onSave"
+        android:text="Spara inmatningar"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
 </LinearLayout>

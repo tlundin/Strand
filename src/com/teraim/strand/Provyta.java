@@ -1,7 +1,7 @@
 package com.teraim.strand;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Calendar;
 
 public class Provyta implements Serializable {
 	
@@ -13,10 +13,14 @@ public class Provyta implements Serializable {
 	 * 
 	 */
 	
-	String pyID, provyta,ruta,year,lagnummer,inventerare,datum,inventeringstyp,orsak,strandtyp,kusttyp,trädförekomst,exponering,gpseast,gpsnorth,
+	String pyID, provyta,ruta,year,lagnummer,inventerare,inventeringstyp,orsak,strandtyp,kusttyp,trädförekomst,exponering,gpseast,gpsnorth,
 	riktning,slutlengeo,slutlenorange,slutlenkal,slutlensupra,slutlenovan,lutninggeo,lutningsupra,vattendjup,marktypgeo,marktypsupra,
 	marktypovan,rekreation,rojning,rojningtid,brygga,stangsel,tacknfaltgeo,tacknfaltsupra,tacknbuskgeo,tacknbusksupra,tackntradgeo,
 	tackntradsupra,vasslen,vasstathet,kriteriestrand,kriterieovan,klippamax,klippalutning;
+	
+	Calendar datum;
+	
+	private boolean isLocked=false;
 
 	public String getpyID() {
 		return pyID;
@@ -25,7 +29,7 @@ public class Provyta implements Serializable {
 	
 	
 	public Provyta(String pyID, String provyta, String ruta, String year,
-			String lagnummer, String inventerare, String datum,
+			String lagnummer, String inventerare, Calendar datum,
 			String inventeringstyp, String orsak, String strandtyp,
 			String kusttyp, String trädförekomst, String exponering,
 			String gpseast, String gpsnorth, String riktning,
@@ -86,9 +90,554 @@ public class Provyta implements Serializable {
 	}
 
 
-	//TODO: Ta bort.
-	//Temporär konstruktor
+	public void setPyID(String pyID) {
+		this.pyID = pyID;
+	}
+
+
+
+	public void setProvyta(String provyta) {
+		this.provyta = provyta;
+	}
+
+
+
+	public void setRuta(String ruta) {
+		this.ruta = ruta;
+	}
+
+
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+
+
+	public void setLagnummer(String lagnummer) {
+		this.lagnummer = lagnummer;
+	}
+
+
+
+	public void setInventerare(String inventerare) {
+		this.inventerare = inventerare;
+	}
+
+
+
+	public void setDatum(Calendar datum) {
+		this.datum = datum;
+	}
+
+
+
+	public void setInventeringstyp(String inventeringstyp) {
+		this.inventeringstyp = inventeringstyp;
+	}
+
+
+
+	public void setOrsak(String orsak) {
+		this.orsak = orsak;
+	}
+
+
+
+	public void setStrandtyp(String strandtyp) {
+		this.strandtyp = strandtyp;
+	}
+
+
+
+	public void setKusttyp(String kusttyp) {
+		this.kusttyp = kusttyp;
+	}
+
+
+
+	public void setTrädförekomst(String trädförekomst) {
+		this.trädförekomst = trädförekomst;
+	}
+
+
+
+	public void setExponering(String exponering) {
+		this.exponering = exponering;
+	}
+
+
+
+	public void setGpseast(String gpseast) {
+		this.gpseast = gpseast;
+	}
+
+
+
+	public void setGpsnorth(String gpsnorth) {
+		this.gpsnorth = gpsnorth;
+	}
+
+
+
+	public void setRiktning(String riktning) {
+		this.riktning = riktning;
+	}
+
+
+
+	public void setSlutlengeo(String slutlengeo) {
+		this.slutlengeo = slutlengeo;
+	}
+
+
+
+	public void setSlutlenorange(String slutlenorange) {
+		this.slutlenorange = slutlenorange;
+	}
+
+
+
+	public void setSlutlenkal(String slutlenkal) {
+		this.slutlenkal = slutlenkal;
+	}
+
+
+
+	public void setSlutlensupra(String slutlensupra) {
+		this.slutlensupra = slutlensupra;
+	}
+
+
+
+	public void setSlutlenovan(String slutlenovan) {
+		this.slutlenovan = slutlenovan;
+	}
+
+
+
+	public void setLutninggeo(String lutninggeo) {
+		this.lutninggeo = lutninggeo;
+	}
+
+
+
+	public void setLutningsupra(String lutningsupra) {
+		this.lutningsupra = lutningsupra;
+	}
+
+
+
+	public void setVattendjup(String vattendjup) {
+		this.vattendjup = vattendjup;
+	}
+
+
+
+	public void setMarktypgeo(String marktypgeo) {
+		this.marktypgeo = marktypgeo;
+	}
+
+
+
+	public void setMarktypsupra(String marktypsupra) {
+		this.marktypsupra = marktypsupra;
+	}
+
+
+
+	public void setMarktypovan(String marktypovan) {
+		this.marktypovan = marktypovan;
+	}
+
+
+
+	public void setRekreation(String rekreation) {
+		this.rekreation = rekreation;
+	}
+
+
+
+	public void setRojning(String rojning) {
+		this.rojning = rojning;
+	}
+
+
+
+	public void setRojningtid(String rojningtid) {
+		this.rojningtid = rojningtid;
+	}
+
+
+
+	public void setBrygga(String brygga) {
+		this.brygga = brygga;
+	}
+
+
+
+	public void setStangsel(String stangsel) {
+		this.stangsel = stangsel;
+	}
+
+
+
+	public void setTacknfaltgeo(String tacknfaltgeo) {
+		this.tacknfaltgeo = tacknfaltgeo;
+	}
+
+
+
+	public void setTacknfaltsupra(String tacknfaltsupra) {
+		this.tacknfaltsupra = tacknfaltsupra;
+	}
+
+
+
+	public void setTacknbuskgeo(String tacknbuskgeo) {
+		this.tacknbuskgeo = tacknbuskgeo;
+	}
+
+
+
+	public void setTacknbusksupra(String tacknbusksupra) {
+		this.tacknbusksupra = tacknbusksupra;
+	}
+
+
+
+	public void setTackntradgeo(String tackntradgeo) {
+		this.tackntradgeo = tackntradgeo;
+	}
+
+
+
+	public void setTackntradsupra(String tackntradsupra) {
+		this.tackntradsupra = tackntradsupra;
+	}
+
+
+
+	public void setVasslen(String vasslen) {
+		this.vasslen = vasslen;
+	}
+
+
+
+	public void setVasstathet(String vasstathet) {
+		this.vasstathet = vasstathet;
+	}
+
+
+
+	public void setKriteriestrand(String kriteriestrand) {
+		this.kriteriestrand = kriteriestrand;
+	}
+
+
+
+	public void setKriterieovan(String kriterieovan) {
+		this.kriterieovan = kriterieovan;
+	}
+
+
+
+	public void setKlippamax(String klippamax) {
+		this.klippamax = klippamax;
+	}
+
+
+
+	public void setKlippalutning(String klippalutning) {
+		this.klippalutning = klippalutning;
+	}
+
+
+
+	public void setLocked(boolean isLocked) {
+		this.isLocked = isLocked;
+	}
+
+
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+
+
+	public String getPyID() {
+		return pyID;
+	}
+
+
+
+	public String getProvyta() {
+		return provyta;
+	}
+
+
+
+	public String getRuta() {
+		return ruta;
+	}
+
+
+
+	public String getYear() {
+		return year;
+	}
+
+
+
+	public String getLagnummer() {
+		return lagnummer;
+	}
+
+
+
+	public String getInventerare() {
+		return inventerare;
+	}
+
+
+
+	public Calendar getDatum() {
+		return datum;
+	}
+
+
+
+	public String getInventeringstyp() {
+		return inventeringstyp;
+	}
+
+
+
+	public String getOrsak() {
+		return orsak;
+	}
+
+
+
+	public String getStrandtyp() {
+		return strandtyp;
+	}
+
+
+
+	public String getKusttyp() {
+		return kusttyp;
+	}
+
+
+
+	public String getTrädförekomst() {
+		return trädförekomst;
+	}
+
+
+
+	public String getExponering() {
+		return exponering;
+	}
+
+
+
+	public String getGpseast() {
+		return gpseast;
+	}
+
+
+
+	public String getGpsnorth() {
+		return gpsnorth;
+	}
+
+
+
+	public String getRiktning() {
+		return riktning;
+	}
+
+
+
+	public String getSlutlengeo() {
+		return slutlengeo;
+	}
+
+
+
+	public String getSlutlenorange() {
+		return slutlenorange;
+	}
+
+
+
+	public String getSlutlenkal() {
+		return slutlenkal;
+	}
+
+
+
+	public String getSlutlensupra() {
+		return slutlensupra;
+	}
+
+
+
+	public String getSlutlenovan() {
+		return slutlenovan;
+	}
+
+
+
+	public String getLutninggeo() {
+		return lutninggeo;
+	}
+
+
+
+	public String getLutningsupra() {
+		return lutningsupra;
+	}
+
+
+
+	public String getVattendjup() {
+		return vattendjup;
+	}
+
+
+
+	public String getMarktypgeo() {
+		return marktypgeo;
+	}
+
+
+
+	public String getMarktypsupra() {
+		return marktypsupra;
+	}
+
+
+
+	public String getMarktypovan() {
+		return marktypovan;
+	}
+
+
+
+	public String getRekreation() {
+		return rekreation;
+	}
+
+
+
+	public String getRojning() {
+		return rojning;
+	}
+
+
+
+	public String getRojningtid() {
+		return rojningtid;
+	}
+
+
+
+	public String getBrygga() {
+		return brygga;
+	}
+
+
+
+	public String getStangsel() {
+		return stangsel;
+	}
+
+
+
+	public String getTacknfaltgeo() {
+		return tacknfaltgeo;
+	}
+
+
+
+	public String getTacknfaltsupra() {
+		return tacknfaltsupra;
+	}
+
+
+
+	public String getTacknbuskgeo() {
+		return tacknbuskgeo;
+	}
+
+
+
+	public String getTacknbusksupra() {
+		return tacknbusksupra;
+	}
+
+
+
+	public String getTackntradgeo() {
+		return tackntradgeo;
+	}
+
+
+
+	public String getTackntradsupra() {
+		return tackntradsupra;
+	}
+
+
+
+	public String getVasslen() {
+		return vasslen;
+	}
+
+
+
+	public String getVasstathet() {
+		return vasstathet;
+	}
+
+
+
+	public String getKriteriestrand() {
+		return kriteriestrand;
+	}
+
+
+
+	public String getKriterieovan() {
+		return kriterieovan;
+	}
+
+
+
+	public String getKlippamax() {
+		return klippamax;
+	}
+
+
+
+	public String getKlippalutning() {
+		return klippalutning;
+	}
+
+
+
+	public boolean isLocked() {
+		return isLocked;
+	}
+
+
+
 	public Provyta(String _pyID) {
 		pyID = _pyID;
+		datum = Calendar.getInstance();
 	}
 }
