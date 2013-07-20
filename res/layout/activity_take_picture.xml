@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <ImageButton
+        android:id="@+id/pic_slut"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="41dp"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/case_no_pic_slut" />
+
+    <ImageButton
+        android:id="@+id/pic_sup"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="41dp"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/case_no_pic_sup" />
+
+    <ImageButton
+        android:id="@+id/pic_upp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="41dp"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/case_no_pic_upp" />
+
+    <ImageButton
+        android:id="@+id/pic_ut"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="41dp"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/case_no_pic_ut" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/pic_left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/case_no_pic_left" />
+
+        <LinearLayout 
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+            <TextView 
+            android:id="@+id/gpsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gps_button"
+            android:textAppearance="?android:attr/textAppearanceLarge" 
+            android:text="No GPS signal..waiting.."
+            android:maxLines="100"
+			android:scrollHorizontally="false"
+            />
+            
+          <Button
+            android:id="@+id/gpsButton"
+            
+             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge" 
+            android:text="Sätt startpunkt"
+            android:onClick="setStartPoint" />
+            
+             <TextView 
+            android:id="@+id/startP_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium" 
+            android:paddingLeft="5dp"
+            />
+        </LinearLayout>
+ 
+        <ImageButton
+            android:id="@+id/pic_right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/case_no_pic_right" />
+   </LinearLayout>
+
+    
+    <Button
+            android:id="@+id/vidare_take_pic"
+            
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge" 
+            android:text="Vidare >" />
+    
+</LinearLayout>

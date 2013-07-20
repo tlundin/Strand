@@ -1,6 +1,7 @@
 package com.teraim.strand;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -110,8 +111,10 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 				String selectedProvyta = provyteArray.get(position);
-				if (position!=0)
+				if (position!=0) {
+					Log.d("Strand","ytspinner onselected, pos: "+position+" sr: "+selectedRuta+" sp"+selectedProvyta);
 					showProvyteStatus(selectedRuta,selectedProvyta);
+				}
 				else
 					exprDia.setVisibility(View.INVISIBLE);
 
@@ -127,18 +130,23 @@ public class MainActivity extends Activity {
 
 		etLag = (EditText)this.findViewById(R.id.edit_lagnr);
 		etInv = (EditText)this.findViewById(R.id.edit_invent);
-		String li=ph.get(Strand.KEY_LAG_ID);
-		if (li!=PersistenceHelper.UNDEFINED)
-			etLag.setText(li);
-		String in=ph.get(Strand.KEY_INVENTERARE);
-		if (in!=PersistenceHelper.UNDEFINED)
-			etInv.setText(in);
 
-		//nothing selected yet?
-		String sr = ph.get(Strand.KEY_RUTA_ID);
-		if (!sr.equals(PersistenceHelper.UNDEFINED))
-			setSpinner(rutSpinner,sr);
-		//setspinner will trigger on item selected and will set selectedRuta.
+		//check if there is a current provvyta being worked on.
+
+		String pycID = ph.get(Strand.KEY_CURRENT_PY);
+
+		py=null;
+		//load if exists..
+		if (pycID!=PersistenceHelper.UNDEFINED)
+			py = Persistent.onLoad(pycID);
+
+		if (py!=null) {
+			Log.d("Strand","loaded current provyta with py"+py.getProvyta());
+			etLag.setText(py.getLagnummer());
+			etInv.setText(py.getInventerare());
+			setSpinner(rutSpinner,py.getRuta());
+			
+		}
 		else {
 			rutArray.add(0,"-");
 			provyteArray.clear();
@@ -153,66 +161,80 @@ public class MainActivity extends Activity {
 	private Spinner rutSpinner;
 	private Spinner ytSpinner;
 	private Provyta py = null;
-	private String pyID=null;
+	private String pyID = null;
 
 	private void showProvyteStatus(String selectedRuta, String selectedProvyta) {
 		TextView expressionMark = (TextView)this.findViewById(R.id.exprmark);
 		Button exprMessage = (Button)this.findViewById(R.id.textmessage);
 		TextView pyIDt = (TextView)this.findViewById(R.id.pyID);
 
-		List<Entry> es = StrandInputData.getEntries();	    		
-		py=null;
-		pyID=null;
-		for(Entry e:es) {
-			if (e.getRuta().equals(selectedRuta) &&
-					e.getProvyta().equals(selectedProvyta)) {
-				pyID = e.getPyid();
-				pyIDt.setText("Provytans ID: "+pyID);
-				//We now have the  PyID. Fetch the object (if any) from persistent storage.		        		
-				py = Persistent.onLoad(pyID);
-
-				exprDia.setVisibility(View.VISIBLE);
-				//If object already exist, offer Edit button. Else, offer Create
-
-
-				if (py !=null) {        			
-					if(py.isLocked()) {
-						expressionMark.setTextColor(Color.RED);
-						expressionMark.setText("!");
-						exprMessage.setText(klar);
-
-					}
-					else {
-						expressionMark.setTextColor(Color.YELLOW);       				
-						expressionMark.setText("!");
-						exprMessage.setText(påbörjad);
-					}
-				} else {
-					expressionMark.setTextColor(Color.GREEN);
-					expressionMark.setText("\u2713");
-					exprMessage.setText(ny);     				    			
-				}
-
-
+		//check if user selected other py than currently selected.
+		if (py!=null) {
+			//if so, trigger search for selected.
+			if (!selectedRuta.equals(py.getRuta())||!selectedProvyta.equals(py.getProvyta())) {
+				Log.d("Strand","selected ruta/provyta does not match py");
+				Log.d("Strand","selectedRuta: "+selectedRuta+" selectedProvyta: "+selectedProvyta+" py.ruta: "+py.getRuta()+" py.py "+py.getProvyta());
+				py=null;
 			}
 		}
+		//if new provyta selected, do something cool.
+		if (py==null) {
+			List<Entry> es = StrandInputData.getEntries();	    				
+			for(Entry e:es) {
+				if (e.getRuta().equals(selectedRuta) &&
+						e.getProvyta().equals(selectedProvyta)) {
+					pyID = e.getPyid();
+					//We now have the  PyID. Fetch the object (if any) from persistent storage.		        		
+					py = Persistent.onLoad(pyID);
+					break;
+				}
+			}
+		} else
+			pyID = py.getpyID();
+		pyIDt.setText("Provytans ID: "+pyID);
+		exprDia.setVisibility(View.VISIBLE);
+		//If object already exist, offer Edit button. Else, offer Create
+
+
+		if (py !=null) {        			
+			if(py.isLocked()) {
+				expressionMark.setTextColor(Color.RED);
+				expressionMark.setText("!");
+				exprMessage.setText(klar);
+
+			}
+			else {
+				expressionMark.setTextColor(Color.YELLOW);       				
+				expressionMark.setText("!");
+				exprMessage.setText(påbörjad);
+			}
+		} else {
+			expressionMark.setTextColor(Color.GREEN);
+			expressionMark.setText("\u2713");
+			exprMessage.setText(ny);     				    			
+		}
+
 
 	}
+
+
+
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		//check if user made changes..refresh..
-		if(ytSpinner.getSelectedItemPosition()!=0) {
-			String selectedProvyta =(String)ytSpinner.getSelectedItem();
-				showProvyteStatus(selectedRuta,selectedProvyta);
+		Log.d("Strand","on resume..");
+		if(py!=null) {
+			showProvyteStatus(py.getRuta(),py.getProvyta());			
 		}
-			
+
 	}
 
 	//Called when button pressed to start insamling.
 	public void startCollect(View view) {
-		if (py == null && pyID != null) {
+		if (py == null) {
+			assert(pyID != null);
 			py = new Provyta(pyID);	 
 			//save globals into the new provyta.
 			py.setLagnummer(etLag.getText().toString());
@@ -220,59 +242,48 @@ public class MainActivity extends Activity {
 			py.setRuta((String)rutSpinner.getSelectedItem());
 			py.setProvyta( (String)ytSpinner.getSelectedItem());
 			py.setInventerare( etInv.getText().toString());
+			py.setPyID(pyID);
 
 		}
-		if (pyID!=null) {
-			//If the provyta is locked, check first with user if he really wants to change it.
-			if (py.isLocked()) {
-				DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						switch (which){
-						case DialogInterface.BUTTON_POSITIVE:
-							begin();
-							break;
+		//If the provyta is locked, check first with user if he really wants to change it.
+		if (py.isLocked()) {
+			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					switch (which){
+					case DialogInterface.BUTTON_POSITIVE:
+						begin();
+						break;
 
-						case DialogInterface.BUTTON_NEGATIVE:
-							break;
-						}
+					case DialogInterface.BUTTON_NEGATIVE:
+						break;
 					}
-				};
+				}
+			};
 
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setTitle("Ytan är markerad som klar!")
-				.setMessage("Vill du verkligen ändra värden?").setPositiveButton("Ja", dialogClickListener)
-				.setNegativeButton("Nej", dialogClickListener).show();
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("Ytan är markerad som klar!")
+			.setMessage("Vill du verkligen ändra värden?").setPositiveButton("Ja", dialogClickListener)
+			.setNegativeButton("Nej", dialogClickListener).show();
 
-			} else 
-				begin();
+		} else 
+			begin();
 
-		}
+
 	}
 
 	private void begin() {
 
-		Bundle b = new Bundle();
-		b.putSerializable(Strand.KEY_PY_PARCEL, py);
-		Intent intent = new Intent(this, ActivityMainInput.class);
-		intent.putExtras(b);		
-
+		Intent intent = new Intent(this, ActivityTakePicture.class);
 		//Save all values for default when starting up next time..
-		ph.put(Strand.KEY_INVENTERARE, etInv.getText().toString());
-		ph.put(Strand.KEY_LAG_ID, etLag.getText().toString());
-		ph.put(Strand.KEY_RUTA_ID, (String)rutSpinner.getSelectedItem());
-		ph.put(Strand.KEY_PROVYTA_ID, (String)ytSpinner.getSelectedItem());
+		ph.put(Strand.KEY_CURRENT_PY,py.getpyID());
 		Log.d("Strand","Saved provyta: "+ (String)ytSpinner.getSelectedItem());
+		//Buffer the py object.
+		Strand.setCurrentProvyta(py);
 		startActivity(intent);
 
 	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		
-		
-	}
 
 	private void setSpinner(Spinner mySpinner, String selected) {
 		ArrayAdapter myAdap = (ArrayAdapter) mySpinner.getAdapter(); //cast to an ArrayAdapter
@@ -294,20 +305,32 @@ public class MainActivity extends Activity {
 				Log.d("Strand","Adding provvyta "+e.getProvyta());
 			}
 		provyteArray.add(0,"-");
-		ytSpinner.setSelection(0);
+		if (py!=null) {
+			Log.d("Strand","Setting spinner position to "+py.getProvyta());
+			setSpinner(ytSpinner,py.getProvyta());
+		} else
+			ytSpinner.setSelection(0);
 	}
 
 
 	private void initIfFirstTime() {
 		//If testFile doesnt exist it will be created and found next time.
-		String testFile = Strand.STRAND_ROOT_DIR +
-				"/ifiexistthenallisfine.txt";
+		String t = Strand.STRAND_ROOT_DIR +
+				"ifiexistthenallisfine.txt";
+		File f = new File(t);
 		Log.d("Strand","Checking if this is first time use...");
-		boolean exists = (new File(testFile)).exists(); 
+		boolean exists = f.exists(); 
 
 		if (!exists) {
-			Log.d("Strand","Yes..executing first time init");
-			initialize();                                  
+			Log.d("Strand","Yes..executing  first time init");
+			initialize();   
+			//create token file to stop further calls to init.
+			try {
+				f.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		else 
 			Log.d("Strand","..Not first time");
@@ -318,6 +341,9 @@ public class MainActivity extends Activity {
 		//create data folder. This will also create the ROOT folder for the Strand app.
 		File folder = new File(Strand.DATA_ROOT_DIR);
 		folder.mkdirs();
+		folder = new File(Strand.PIC_ROOT_DIR);
+		if(!folder.mkdirs())
+			Log.d("Strand","failed...");
 	}
 
 	@Override

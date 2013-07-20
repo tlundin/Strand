@@ -23,6 +23,9 @@ public class Strand {
 	
 	//Root for the data objects storing data per provyta.
 	public final static String DATA_ROOT_DIR = path+"/strand/data/";
+	//Root for pictures.
+	public static final String PIC_ROOT_DIR = path+"/strand/bilder/";
+	
 
 	public static final String KEY_PY_PARCEL = "com.teraim.strand.py_object";
 	
@@ -33,7 +36,11 @@ public class Strand {
 	public static final String KEY_LAG_ID = "lag_id";
 	
 	public static final String KEY_INVENTERARE = "inventerare";
-	
+
+	public static final String KEY_CURRENT_PY = "py_id";
+
+	protected static final String KEY_PIC_NAME = "pic_name";
+
 	public static class PersistenceHelper {
 		public static final String UNDEFINED = "";
 		SharedPreferences sp;
@@ -49,6 +56,16 @@ public class Strand {
 		sp.edit().putString(key,value).commit();
 		}
 		
+	}
+
+	private static Provyta currentProvyta;
+
+	public static void setCurrentProvyta(Provyta py) {
+		currentProvyta = py;
+	}
+
+	public static Provyta getCurrentProvyta() {
+		return currentProvyta;
 	}
 	
 }

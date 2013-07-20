@@ -20,6 +20,8 @@ public class Provyta implements Serializable {
 	
 	Calendar datum;
 	
+	double startPEast,startPNorth;
+	
 	private boolean isLocked=false;
 
 	public String getpyID() {
@@ -628,7 +630,13 @@ public class Provyta implements Serializable {
 		return klippalutning;
 	}
 
+	public void setStartPEast(double e) {
+		startPEast = e;
+	}
 
+	public void setStartPNorth(double n) {
+		startPEast = n;
+	}
 
 	public boolean isLocked() {
 		return isLocked;
