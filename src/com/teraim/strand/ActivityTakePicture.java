@@ -27,10 +27,10 @@ import android.widget.Toast;
 public class ActivityTakePicture extends Activity implements LocationListener {
 
 	ImageButton slut,sup,upp,ut,left,right;
-	Button gpsB;
+	Button gpsB,vidare;
 	TextView gpsT,startP_text;
 	//convenience..
-	Provyta py = Strand.getCurrentProvyta();
+	Provyta py = Strand.getCurrentProvyta(this);
 	//pictures stored as: /strand/bilder/pyID_NAME
 	String imgPath = Strand.PIC_ROOT_DIR+py.getpyID()+"_";
 	//Map name to button
@@ -43,6 +43,7 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_take_picture);
 		
+		vidare = (Button)this.findViewById(R.id.vidare_take_pic);
 		gpsB = (Button)this.findViewById(R.id.gpsButton);
 		gpsT = (TextView)this.findViewById(R.id.gpsText);
 		startP_text = (TextView)this.findViewById(R.id.startP_text);
@@ -66,8 +67,17 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 		lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		
 		if (lm==null) {
-			Log.e("NILS","Startup of GPS tracking failed in ProvYtaGeoUpdater");
+			Log.e("Strand","Startup of GPS tracking failed in ProvYtaGeoUpdater");
 		}
+		
+		final Intent i = new Intent(this, ActivityZoneSplit.class);
+
+		
+		vidare.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivity(i);
+			}});
 
 	}
 	

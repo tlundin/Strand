@@ -16,8 +16,26 @@ public class Provyta implements Serializable {
 	String pyID, provyta,ruta,year,lagnummer,inventerare,inventeringstyp,orsak,strandtyp,kusttyp,trädförekomst,exponering,gpseast,gpsnorth,
 	riktning,slutlengeo,slutlenorange,slutlenkal,slutlensupra,slutlenovan,lutninggeo,lutningsupra,vattendjup,marktypgeo,marktypsupra,
 	marktypovan,rekreation,rojning,rojningtid,brygga,stangsel,tacknfaltgeo,tacknfaltsupra,tacknbuskgeo,tacknbusksupra,tackntradgeo,
-	tackntradsupra,vasslen,vasstathet,kriteriestrand,kriterieovan,klippamax,klippalutning;
+	tackntradsupra,vasslen,vasstathet,kriteriestrand,kriterieovan,klippamax,klippalutning,lutningextra;
 	
+	/**
+	 * @return the lutningextra
+	 */
+	public String getLutningextra() {
+		return lutningextra;
+	}
+
+
+
+	/**
+	 * @param lutningextra the lutningextra to set
+	 */
+	public void setLutningextra(String lutningextra) {
+		this.lutningextra = lutningextra;
+	}
+
+
+
 	Calendar datum;
 	
 	double startPEast,startPNorth;

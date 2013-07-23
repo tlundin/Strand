@@ -133,13 +133,8 @@ public class MainActivity extends Activity {
 
 		//check if there is a current provvyta being worked on.
 
-		String pycID = ph.get(Strand.KEY_CURRENT_PY);
-
-		py=null;
-		//load if exists..
-		if (pycID!=PersistenceHelper.UNDEFINED)
-			py = Persistent.onLoad(pycID);
-
+		py = Strand.getCurrentProvyta(this);
+		
 		if (py!=null) {
 			Log.d("Strand","loaded current provyta with py"+py.getProvyta());
 			etLag.setText(py.getLagnummer());

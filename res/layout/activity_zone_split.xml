@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false" 
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.30"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/extraT"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:background="#F8FFFF"
+            android:gravity="center"
+            android:text="Extralitoral" />
+
+        <TextView
+            android:id="@+id/supraT"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:background="#8FFFFF"
+            android:gravity="center"
+            android:text="Supralitoral" />
+
+        <TextView
+            android:id="@+id/geoT"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:background="#FFF8FF"
+            android:gravity="center"
+            android:text="Geolitoral" />
+
+        <TextView
+            android:id="@+id/hydroT"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:background="#87CEEB"
+            android:gravity="center"
+            android:text="Hydrolitoral" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/contentPane"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.70"
+        android:background="#F0FFFF"
+        android:orientation="vertical" >
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text ="Välj zon till vänster"
+            android:layout_margin="15dip"
+            />
+            
+    </LinearLayout>
+
+</LinearLayout>

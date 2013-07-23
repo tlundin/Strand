@@ -40,7 +40,7 @@ public class ActivityMainInput extends Activity {
 		
 //		if(b!=null)
 //		    	py = (Provyta) b.getSerializable(Strand.KEY_PY_PARCEL);
-		py = Strand.getCurrentProvyta();
+		py = Strand.getCurrentProvyta(this);
 		
 		if (py!=null) {
 		

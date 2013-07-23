@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 /**
  * 
@@ -46,6 +47,8 @@ public class Strand {
 		SharedPreferences sp;
 		public PersistenceHelper(Context ctx) {
 			sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+			if (ctx == null)
+				Log.e("Strand","Context null in getdefaultsharedpreferences!");
 		}
 	
 		public String get(String key) {
@@ -58,13 +61,23 @@ public class Strand {
 		
 	}
 
-	private static Provyta currentProvyta;
+	private static Provyta currentProvyta=null;
 
 	public static void setCurrentProvyta(Provyta py) {
 		currentProvyta = py;
 	}
 
-	public static Provyta getCurrentProvyta() {
+	public static Provyta getCurrentProvyta(Context c) {
+		if(currentProvyta==null) {
+			PersistenceHelper ph = new PersistenceHelper(c);
+			Log.e("Strand","Provyta null in Stran.getCurrent..");
+			//Try to load from saved PY_ID.
+			String pycID = ph.get(Strand.KEY_CURRENT_PY);
+			//load if exists..
+			if (pycID!=PersistenceHelper.UNDEFINED)
+				currentProvyta = Persistent.onLoad(pycID);
+
+		} 
 		return currentProvyta;
 	}
 	
