@@ -31,6 +31,8 @@
             android:name="com.teraim.strand.ActivityTakePicture"/>
         <activity
             android:name="com.teraim.strand.ActivityZoneSplit"/>
+        <activity
+            android:name="com.teraim.strand.ActivityArterFaltskikt"/>
         
     </application>
 

@@ -12,6 +12,7 @@ import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -36,18 +37,22 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 	//Map name to button
 	HashMap<String, ImageButton> buttonM = new HashMap<String,ImageButton>();
 	private LocationManager lm;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_take_picture);
-		
+
 		vidare = (Button)this.findViewById(R.id.vidare_take_pic);
 		gpsB = (Button)this.findViewById(R.id.gpsButton);
 		gpsT = (TextView)this.findViewById(R.id.gpsText);
 		startP_text = (TextView)this.findViewById(R.id.startP_text);
-		
+
+		gpsT.setVisibility(View.VISIBLE);
+		gpsB.setVisibility(View.GONE);
+
+
 		slut = (ImageButton)this.findViewById(R.id.pic_slut);
 		sup = (ImageButton)this.findViewById(R.id.pic_sup);
 		upp= (ImageButton)this.findViewById(R.id.pic_upp);
@@ -62,17 +67,17 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 		initPic(left,"left");
 		initPic(right,"right");
 
-		
+
 		//Init geoupdate
 		lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		
+
 		if (lm==null) {
 			Log.e("Strand","Startup of GPS tracking failed in ProvYtaGeoUpdater");
 		}
-		
+
 		final Intent i = new Intent(this, ActivityZoneSplit.class);
 
-		
+
 		vidare.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -80,7 +85,7 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 			}});
 
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -96,7 +101,7 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 				0,
 				1,
 				this);
- 
+
 	}
 	/**
 	 * 
@@ -108,12 +113,12 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 		drawButton(b,name);
 		addListener(b,name);
 	}
-		
-		
-		private void drawButton(ImageButton b, String name) {
+
+
+	private void drawButton(ImageButton b, String name) {
 		// TODO Auto-generated method stub
-		
-	
+
+
 		//Try to load pic from disk, if any.
 		//To avoid memory issues, we need to figure out how big bitmap to allocate, approximately
 		//Picture is in landscape & should be approx half the screen width, and 1/5th of the height.
@@ -167,14 +172,14 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 		else {
 			Log.d("Strand","Did not find picture "+imgFileName);
 			//need to set the width equal to the height...
-		
+
 		}
 	}
-		
+
 	private void addListener(ImageButton b, final String name) {
 		// TODO Auto-generated method stub
-		
-	
+
+
 		b.setOnClickListener(new OnClickListener()
 		{
 
@@ -184,17 +189,17 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 				Toast.makeText(getBaseContext(),
 						"pic" + name + " selected",
 						Toast.LENGTH_SHORT).show();
-				
+
 				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				
+
 				File file = new File(Strand.PIC_ROOT_DIR, py.getpyID()+"_"+name+".png");
-				
+
 				Log.d("Strand","Saving pic "+name);
 				currSaving=name;
 				Uri outputFileUri = Uri.fromFile(file);
 
 				intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-//				intent.putExtra(Strand.KEY_PIC_NAME, name);
+				//				intent.putExtra(Strand.KEY_PIC_NAME, name);
 				startActivityForResult(intent, TAKE_PICTURE);
 
 
@@ -206,7 +211,7 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 	}
 	final int TAKE_PICTURE = 133;
 	private String currSaving = null;
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent myI){
 
@@ -214,7 +219,7 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 			if (resultCode == Activity.RESULT_OK) 
 			{
 				Log.d("Strand","picture was taken, result ok");
-//				String name = myI.getStringExtra(Strand.KEY_PIC_NAME);
+				//				String name = myI.getStringExtra(Strand.KEY_PIC_NAME);
 				if (currSaving!=null) {
 					ImageButton b = buttonM.get(currSaving);
 					drawButton(b,currSaving);
@@ -228,7 +233,7 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 		}
 		currSaving=null;
 	}
-	
+
 	public static int calculateInSampleSize(
 			BitmapFactory.Options options, int reqWidth, int reqHeight) {
 		// Raw height and width of image
@@ -251,39 +256,76 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 		return inSampleSize;
 	}
 	double[] cords = null;
-	
+
 	@Override
 	public void onLocationChanged(Location location) {
-		
-		cords = Geomatte.convertToSweRef(location.getLatitude(),location.getLongitude());
-		
-		gpsT.setText("Nuvarande kordinater:\nN: "+cords[0]+" \nÖ: "+cords[1]);
-	}
-	
-	public void setStartPoint(View v) {	
-		if(cords!=null) {
-			py.setStartPNorth(cords[0]);
-			py.setStartPEast(cords[1]);	
-			startP_text.setText("N: "+cords[0]+" Ö: "+cords[1]);
-		} else {
-			startP_text.setText("! Inget värde !");
+		//If no startpunkt set, update button
+		if (!set) {
+			cords = Geomatte.convertToSweRef(location.getLatitude(),location.getLongitude());
+			if (gpsT.isShown()) {
+				gpsT.setVisibility(View.GONE);
+				gpsB.setVisibility(View.VISIBLE);
+			}
+
+			gpsB.setText("Sätt startpunkt\n(N: "+cords[0]+" \nÖ: "+cords[1]+")");
 		}
-			
 	}
-	
-	@Override
-	public void onProviderDisabled(String arg0) {
-		// TODO Auto-generated method stub
+	//Flag set if startpunkt set.
+	boolean set = false;
+
+	public void setStartPoint(View v) {	
 		
+		if (set == true) {
+			set = false;
+			startP_text.setVisibility(View.GONE);
+			gpsB.setVisibility(View.GONE);
+			gpsT.setVisibility(View.VISIBLE);
+			gpsT.setText("Ett ögonblick..");
+
+		}
+		else {
+			if(cords!=null) {
+				py.setStartPNorth(cords[0]);
+				py.setStartPEast(cords[1]);	
+				gpsB.setText("Sätt ny startpunkt");
+				startP_text.setText("Startpunkt satt till:\nN: "+cords[0]+" Ö: "+cords[1]);
+				startP_text.setVisibility(View.VISIBLE);
+				gpsT.setVisibility(View.GONE);
+				set=true;
+
+			} else {
+				startP_text.setText("! Inget värde !");
+			}
+		}
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		gpsB.setVisibility(View.GONE);
+		gpsT.setVisibility(View.VISIBLE);
+		gpsT.setText("GPS avslagen..");
 	}
 	@Override
 	public void onProviderEnabled(String arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
-	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-		// TODO Auto-generated method stub
-		
+	public void onStatusChanged(String provider, int status, Bundle arg2) {
+		if (status == LocationProvider.AVAILABLE) {
+
+		} else if (status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
+			gpsB.setVisibility(View.GONE);
+			gpsT.setVisibility(View.VISIBLE);
+			gpsT.setText("Ett ögonblick..");
+
+
+		} else if (status == LocationProvider.OUT_OF_SERVICE) {
+			gpsB.setVisibility(View.GONE);
+			gpsT.setVisibility(View.VISIBLE);
+			gpsT.setText("Förlorade GPS..");
+
+		}
+
 	}
 }

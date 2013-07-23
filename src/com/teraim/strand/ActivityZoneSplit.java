@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.SpannableString;
@@ -358,6 +359,20 @@ public class ActivityZoneSplit extends Activity {
 		}
 		TextView tv = (TextView)v.findViewById(R.id.editfieldinput);
 		tv.setText(value);
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+	   Log.d("Strand","onsaveinstance called");
+		//Spara värden
+		Persistent.onSave(py);
+	    super.onSaveInstanceState(savedInstanceState);
+	}
+	
+	public void onVidare(View v) {
+		Log.d("Strand","onvidare called");
+		Intent i = new Intent(this, ActivityArterFaltskikt.class);
+		startActivity(i);
 	}
 
 }
