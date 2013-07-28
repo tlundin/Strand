@@ -42,6 +42,19 @@ public class Strand {
 
 	protected static final String KEY_PIC_NAME = "pic_name";
 
+	public static final String KEY_CURRENT_TABLE = "curr_table";
+
+	public static final String KEY_STATE = "key_state";
+
+	public static final String KEY_CHAR = "key_char";
+
+	public static final int ARTER = 1;
+	public static final int TRÄD = 2;
+	public static final int BUSKAR = 3;
+
+
+	
+	
 	public static class PersistenceHelper {
 		public static final String UNDEFINED = "";
 		SharedPreferences sp;
@@ -69,6 +82,8 @@ public class Strand {
 
 	public static Provyta getCurrentProvyta(Context c) {
 		if(currentProvyta==null) {
+			if (c==null)
+				Log.e("Strand","CONTEXT was null in Strand!!");
 			PersistenceHelper ph = new PersistenceHelper(c);
 			Log.e("Strand","Provyta null in Stran.getCurrent..");
 			//Try to load from saved PY_ID.
@@ -80,5 +95,7 @@ public class Strand {
 		} 
 		return currentProvyta;
 	}
+	
+	
 	
 }

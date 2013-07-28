@@ -36,7 +36,7 @@ import com.teraim.strand.dataobjekt.StrandInputData.Entry;
  *
  * This is the entry point class for the App.
  */
-public class MainActivity extends Activity {
+public class ActivityMain extends Activity {
 
 	private Activity mother;
 	private PersistenceHelper ph;

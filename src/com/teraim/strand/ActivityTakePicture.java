@@ -77,7 +77,6 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 
 		final Intent i = new Intent(this, ActivityZoneSplit.class);
 
-
 		vidare.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

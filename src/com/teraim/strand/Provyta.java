@@ -3,12 +3,14 @@ package com.teraim.strand;
 import java.io.Serializable;
 import java.util.Calendar;
 
+import com.teraim.strand.dataobjekt.Table;
+
 public class Provyta implements Serializable {
 	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4483220563308165817L;
+	private static final long serialVersionUID = 4483220563308165820L;
 	/**
 	 * 
 	 */
@@ -26,7 +28,7 @@ public class Provyta implements Serializable {
 	}
 
 
-
+	
 	/**
 	 * @param lutningextra the lutningextra to set
 	 */
@@ -40,6 +42,17 @@ public class Provyta implements Serializable {
 	
 	double startPEast,startPNorth;
 	
+	/*List <TrädListEntry>träd;
+	
+	List <BuskListEntry>buskar;
+	
+	List <ArtListEntry>arter;
+	
+	*/
+	Table träd,buskar,arter;
+	
+	
+	
 	private boolean isLocked=false;
 
 	public String getpyID() {
@@ -48,6 +61,60 @@ public class Provyta implements Serializable {
 	
 	
 	
+	/**
+	 * @return the träd
+	 */
+	public Table getTräd() {
+		return träd;
+	}
+
+
+
+	/**
+	 * @param träd the träd to set
+	 */
+	public void setTräd(Table träd) {
+		this.träd = träd;
+	}
+
+
+
+	/**
+	 * @return the buskar
+	 */
+	public Table getBuskar() {
+		return buskar;
+	}
+
+
+
+	/**
+	 * @param buskar the buskar to set
+	 */
+	public void setBuskar(Table buskar) {
+		this.buskar = buskar;
+	}
+
+
+
+	/**
+	 * @return the arter
+	 */
+	public Table getArter() {
+		return arter;
+	}
+
+
+
+	/**
+	 * @param arter the arter to set
+	 */
+	public void setArter(Table arter) {
+		this.arter = arter;
+	}
+
+
+
 	public Provyta(String pyID, String provyta, String ruta, String year,
 			String lagnummer, String inventerare, Calendar datum,
 			String inventeringstyp, String orsak, String strandtyp,
@@ -665,5 +732,9 @@ public class Provyta implements Serializable {
 	public Provyta(String _pyID) {
 		pyID = _pyID;
 		datum = Calendar.getInstance();
+		//Create empty tables..
+		träd = new Table(4);
+		arter = new Table(4);
+		buskar = new Table(5);
 	}
 }

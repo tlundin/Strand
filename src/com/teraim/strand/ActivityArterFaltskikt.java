@@ -1,26 +1,31 @@
 package com.teraim.strand;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
+import android.R.color;
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.teraim.strand.dataobjekt.ArtListEntry;
 import com.teraim.strand.dataobjekt.ArtListaProvider;
+import com.teraim.strand.dataobjekt.TableArter;
+import com.teraim.strand.dataobjekt.TableBase;
+import com.teraim.strand.dataobjekt.TableBuskar;
+import com.teraim.strand.dataobjekt.TableTrees;
 
 /**
  * 
@@ -31,9 +36,13 @@ public class ActivityArterFaltskikt extends Activity {
 
 
 	private LinearLayout buttonPanel,contentPane;
-	
+
+	private ListView myList;
+
 	private ArtListaProvider ap;
 
+	private final String[] columnTags = new String[] {"Släkte", "Familj", "Svenskt namn"};
+	private final int[] columnIds = new int[] {R.id.column1, R.id.column2, R.id.column3};
 	private final static String[] alfabet = {
 		"*","A","B","C","D","E","F",
 		"G","H","I","J","K","L",
@@ -42,11 +51,59 @@ public class ActivityArterFaltskikt extends Activity {
 		"Y","Z","Å","Ä","Ö"};
 
 	//keeps currently selected char if any
-	String currC = null;
+	private String currCh = null;
+
+	//The table being built
+	private TableBase myTable;
+
+	//convenience..
+	private Provyta py = Strand.getCurrentProvyta(this);
+
+	protected int state = ShowInitial;
+
+	private int myProvider = -1;
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		//If a state exist..
+		if (savedInstanceState != null) {
+			state = savedInstanceState.getInt(Strand.KEY_STATE);
+			currCh = savedInstanceState.getString(Strand.KEY_CHAR);
+			Log.d("Strand","My state is "+state);
+		}
+
 		setContentView(R.layout.activity_arter_faltskikt);
+
+		//wrapper for tables to make them scrollable.
+		scrollis = new ScrollView(this);
+		//Get the Table.
+		int table = getIntent().getIntExtra(Strand.KEY_CURRENT_TABLE, -1);
+		switch (table) {
+		case Strand.TRÄD:
+			myTable = new TableTrees(this,py.getTräd());
+			myProvider  = R.raw.herbs;
+			Log.d("Strand","Table set to träd.");
+			break;
+		case Strand.BUSKAR:
+			myProvider = R.raw.buskar;
+			myTable = new TableBuskar(this,py.getBuskar());			
+			Log.d("Strand","Table set to buskar.");
+			break;
+
+		case Strand.ARTER:
+			myProvider = R.raw.herbs;
+			myTable = new TableArter(this,py.getArter());
+			Log.d("Strand","Table set to fältskikt.");
+			break;
+
+		default:
+			Log.e("Strand","current table not set in ActivityArter..");
+			break;
+		}
+
 
 
 		buttonPanel = (LinearLayout) this.findViewById(R.id.buttonPanel);
@@ -59,56 +116,155 @@ public class ActivityArterFaltskikt extends Activity {
 			public void onClick(View v) {
 
 				String ch = ((Button)v).getText().toString();
-				Log.d("Strand","Button "+ch);
+				Log.d("Strand","User pressed "+ch);
 				//generate List selector for this character.
 				//if equals current - do nothing.
-				
-				if (ch!=currC) {
-					currC = ch;
-					contentPane.removeAllViews();
-					contentPane.addView(getHeader(ch));
-					contentPane.addView(getList(ch));
-				}
+
+
+				currCh = ch;
+
+
+				//TableTrees tr = new TableTrees(ActivityArterFaltskikt.this);
+				//TableArter ta = new TableArter(ActivityArterFaltskikt.this);
+
+
+				myList = getList(currCh);
+				state = ShowList;
+				redraw();
+
+
 			}
 
-			private TextView getHeader(String ch) {
-				TextView tv = (TextView)LayoutInflater.from(getBaseContext()).inflate(R.layout.header,null);
-				tv.setText("Arter "+ch);
-				return tv;
+
+
+
+		};
+		Button b;
+		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
+		for (String c:alfabet) {
+			b = new Button(this);
+			b.setLayoutParams(lp);
+			b.setText(c);
+			b.setOnClickListener(cl);
+			buttonPanel.addView(b);
+		}
+
+		//Create a provider 
+		ap = new ArtListaProvider(this,myProvider);
+
+		redraw();
+	}
+
+	private ListView getList(String ch) {
+
+		ArrayList<HashMap<String, String>> mylistData = ap.getArter(ch);
+		ListView list = new ListView(ActivityArterFaltskikt.this);
+		ListView.LayoutParams lp = new ListView.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+
+		TableAdapter arrayAdapter =
+				new TableAdapter(ActivityArterFaltskikt.this, mylistData, R.layout.list_row,
+						columnTags , columnIds);
+		list.setAdapter(arrayAdapter);
+
+		list.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+
+				//Third column has the name.
+				String name = ((TextView)view.findViewById(R.id.column3)).getText().toString();
+
+				Toast.makeText(getBaseContext(), name, Toast.LENGTH_LONG).show();
+				state = ShowTable;
+				myTable.addRow(name);
+				redraw();
 			}
+		}				
+				);
+		return list;
 
-			private ListView getList(String ch) {
-				final String[] columnTags = new String[] {"Släkte", "Familj", "Svenskt namn"};
-				final int[] columnIds = new int[] {R.id.column1, R.id.column2, R.id.column3};
-
-				ArrayList<HashMap<String, String>> mylistData = ap.getArter(ch);
-				ListView list = new ListView(ActivityArterFaltskikt.this);
-				ListView.LayoutParams lp = new ListView.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-
-				TableAdapter arrayAdapter =
-						new TableAdapter(ActivityArterFaltskikt.this, mylistData, R.layout.list_row,
-								columnTags , columnIds);
-				list.setAdapter(arrayAdapter);
-
-				return list;
-
-
-			}};
-			Button b;
-			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
-			for (String c:alfabet) {
-				b = new Button(this);
-				b.setLayoutParams(lp);
-				b.setText(c);
-				b.setOnClickListener(cl);
-				buttonPanel.addView(b);
-			}
-
-			//Create a provider for Örter.
-			ap = new ArtListaProvider(this,R.raw.herbs);
-			
 
 	}
+	private View createTableHeader() {
+		final int[] sortFlags = new int[] {ArtListaProvider.SLÄKTE_F,ArtListaProvider.FAMILJ_F,ArtListaProvider.SVENSK_F};
+		final Map<Integer,Integer> sort = new HashMap<Integer,Integer>();
+		LinearLayout header = (LinearLayout)LayoutInflater.from(getBaseContext()).inflate(R.layout.list_row,null);
+		int count = 0;
+		for (int id:columnIds) {
+			TextView textview = (TextView) header.findViewById(id);
+			sort.put(id,sortFlags[count]);
+			assert(textview!=null);
+			textview.setTypeface(Typeface.DEFAULT_BOLD);
+			textview.setBackgroundColor(color.darker_gray);
+			textview.setText(columnTags[count]);
+			textview.setClickable(true);
+			textview.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					//Change sort order & generate new list.
+					ap.setSortColumn(sort.get(v.getId()));
+					if (currCh!=null) {
+						contentPane.removeView(myList);
+						myList = getList(currCh);
+						contentPane.addView(myList);
+					}
+
+				}});
+			count++;
+		}
+		return header;
+	}
+
+	//State variables:
+	private final static int ShowTable = 1;
+	private final static int ShowList = 2;
+	private final static int ShowInitial = 0;
+
+	private ScrollView scrollis;
+
+	private void redraw() {
+		contentPane.removeAllViews();
+
+		switch (state) {
+		case ShowTable:	
+			scrollis.removeAllViews();
+			scrollis.addView(myTable);	        
+			contentPane.addView(scrollis);		
+			break;
+		case ShowList:
+			contentPane.addView(createPageHeader(currCh));
+			contentPane.addView(createTableHeader());
+			if (myList == null)
+				myList = getList(currCh);
+			contentPane.addView(myList);
+			break;
+		case ShowInitial:
+			//contentPane.addView(initialText);
+			break;
+
+		}
+	}
+
+	private TextView createPageHeader(String ch) {
+		TextView tv = (TextView)LayoutInflater.from(getBaseContext()).inflate(R.layout.header,null);
+		tv.setText("Arter "+ch);
+		return tv;
+	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+	 */
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putInt(Strand.KEY_STATE,state);
+		outState.putString(Strand.KEY_CHAR,currCh);
+
+		super.onSaveInstanceState(outState);
+	}
+
+
 
 
 }

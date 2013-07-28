@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.teraim.strand.dataobjekt.InputAlertBuilder;
+import com.teraim.strand.dataobjekt.InputAlertBuilder.AlertBuildHelper;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -192,20 +195,14 @@ public class ActivityZoneSplit extends Activity {
 		return view;	
 	}
 
-	private interface AlertBuildHelper {
 
-		public View createView(Context c);
-
-		public void setResult(View inputView);		
-
-	}
 
 	private View addBooleanInput(ViewGroup bg,final String headerT,final String bodyT,final String currValue,final int id) {
 		final View v = createClickableField(bg,headerT,currValue);
 
-		final AlertBuildHelper abh = new AlertBuildHelper() {
+		final AlertBuildHelper abh = new AlertBuildHelper(getBaseContext()) {
 			@Override
-			public View createView(Context c) {
+			public View createView() {
 				// Set an EditText view to get user input 
 				View view = LayoutInflater.from(c).inflate(R.layout.ja_nej_radiogroup,null);
 				RadioButton ja = (RadioButton)view.findViewById(R.id.ja);
@@ -220,11 +217,11 @@ public class ActivityZoneSplit extends Activity {
 				return view;
 			}
 			@Override
-			public void setResult(View inputView) {
+			public void setResult(int id, View inputView,View outputView) {
 				setStringValue(id,((RadioButton)inputView.findViewById(R.id.ja)).isChecked()?"1":"0",v);
 			}};		
 
-			v.setOnClickListener(createAlert(headerT,bodyT,abh));
+			v.setOnClickListener(InputAlertBuilder.createAlert(id,headerT,bodyT,abh,v));
 			return v;		
 
 	}
@@ -233,9 +230,9 @@ public class ActivityZoneSplit extends Activity {
 
 		final View v = createClickableField(bg,headerT,currValue);
 
-		final AlertBuildHelper abh = new AlertBuildHelper() {
+		final AlertBuildHelper abh = new AlertBuildHelper(getBaseContext()) {
 			@Override
-			public View createView(Context c) {
+			public View createView() {
 				// Set an EditText view to get user input 
 				final Spinner spinner = new Spinner(c);
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(c, android.R.layout.simple_spinner_dropdown_item, entries);		
@@ -244,22 +241,22 @@ public class ActivityZoneSplit extends Activity {
 				return spinner;
 			}
 			@Override
-			public void setResult(View inputView) {
+			public void setResult(int id, View inputView,View outputView) {
 				Log.d("Strand","Value for spinner: "+values.get(((Spinner)inputView).getSelectedItemPosition()));
-				setStringValue(id,values.get(((Spinner)inputView).getSelectedItemPosition()),v);
+				setStringValue(id,values.get(((Spinner)inputView).getSelectedItemPosition()),outputView);
 			}};
 
 
-			v.setOnClickListener(createAlert(headerT,bodyT,abh));
+			v.setOnClickListener(InputAlertBuilder.createAlert(id,headerT,bodyT,abh,v));
 			return v;		
 	}
 
 	private View addNormalInput(ViewGroup bg,final String headerT,final String bodyT,final String currValue, final int id, final int inputType) {
 		final View v = createClickableField(bg, headerT,currValue);
 		final TextView et = (TextView)v.findViewById(R.id.editfieldinput);
-		final AlertBuildHelper abh = new AlertBuildHelper() {
+		final InputAlertBuilder.AlertBuildHelper abh = new AlertBuildHelper(this.getBaseContext()) {
 			@Override
-			public View createView(Context c) {
+			public View createView() {
 				// Set an EditText view to get user input 
 				final EditText input = new EditText(c);
 
@@ -270,96 +267,63 @@ public class ActivityZoneSplit extends Activity {
 			}
 
 			@Override
-			public void setResult(View inputView) {
-				setStringValue(id,((EditText)inputView).getText().toString(),v);
+			public void setResult(int id,View inputView,View outputView) {
+				setStringValue(id,((EditText)inputView).getText().toString(),outputView);
 			}};
 
-			v.setOnClickListener(createAlert(headerT,bodyT,abh));
+			v.setOnClickListener(InputAlertBuilder.createAlert(id,headerT,bodyT,abh,v));
 
 			return v;		
 
 	}
 
 
-	private OnClickListener createAlert(final String headerT, final String bodyT, final AlertBuildHelper abh) {
+	private void setStringValue(int id, String value, View v) { 
+			switch(id) {
+			case ID_SlutlenOvan:
+				py.setSlutlenovan(value);
+				break;
 
-		final Context c = this;
+			case ID_SlutlenGeo:
+				py.setSlutlengeo(value);
+				break;
+			case ID_StrandTyp:
+				py.setStrandtyp(value);
+				break;
 
-		return new OnClickListener() {
+			case ID_KustTyp:
+				py.setKusttyp(value);
+				break;
 
-			@Override
-			public void onClick(View v) {
-
-				//On click, create dialog 			
-				AlertDialog.Builder alert = new AlertDialog.Builder(c);
-				alert.setTitle(headerT);
-				alert.setMessage(bodyT);
-				final View inputView = abh.createView(c);
-				alert.setView(inputView);
-				alert.setPositiveButton("Spara", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {				  
-						abh.setResult(inputView);
-					}
-
-				});
-				alert.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						// Canceled.
-					}
-				});	
-
-				alert.show();
-			}		
-		};	
-
-	}
-
-
-	private void setStringValue(int id, String value, View v) {
-		switch(id) {
-		case ID_SlutlenOvan:
-			py.setSlutlenovan(value);
-			break;
-
-		case ID_SlutlenGeo:
-			py.setSlutlengeo(value);
-			break;
-		case ID_StrandTyp:
-			py.setStrandtyp(value);
-			break;
-
-		case ID_KustTyp:
-			py.setKusttyp(value);
-			break;
-
-		case ID_TradForekomst:
-			py.setTrädförekomst(value);
-			break;
-		
-		case ID_VägExponering:
-			py.setExponering(value);
-			break;
+			case ID_TradForekomst:
+				py.setTrädförekomst(value);
+				break;
 			
-		case ID_SlutlenSupra:
-			py.setSlutlensupra(value);
-			break;
-		
-		case ID_LutningGeo:
-			py.setLutninggeo(value);
-			break;
-		case ID_LutningSupra:
-			py.setLutningsupra(value);
-			break;
-		case ID_LutningExtra:
-			py.setLutningextra(value);
-			break;
-		case ID_Vattendjup:
-			py.setVattendjup(value);
-			break;
-		}
-		TextView tv = (TextView)v.findViewById(R.id.editfieldinput);
-		tv.setText(value);
+			case ID_VägExponering:
+				py.setExponering(value);
+				break;
+				
+			case ID_SlutlenSupra:
+				py.setSlutlensupra(value);
+				break;
+			
+			case ID_LutningGeo:
+				py.setLutninggeo(value);
+				break;
+			case ID_LutningSupra:
+				py.setLutningsupra(value);
+				break;
+			case ID_LutningExtra:
+				py.setLutningextra(value);
+				break;
+			case ID_Vattendjup:
+				py.setVattendjup(value);
+				break;
+			}
+			
 	}
+
+
 	
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -371,7 +335,7 @@ public class ActivityZoneSplit extends Activity {
 	
 	public void onVidare(View v) {
 		Log.d("Strand","onvidare called");
-		Intent i = new Intent(this, ActivityArterFaltskikt.class);
+		Intent i = new Intent(this, ActivityZoneless.class);
 		startActivity(i);
 	}
 

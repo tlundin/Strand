@@ -26,14 +26,13 @@ public class ArtListaProvider {
 		try {
 			// While the BufferedReader readLine is not null 
 			while ((readLine = br.readLine()) != null) {
-				Log.d("TEXT", readLine);
 				if (readLine !=null) {
 					String[] temp = readLine.split(",");
 					if (temp!=null) {
 						if (temp.length!=3) 
 							Log.e("Strand","Suspicious number of elements in row.");
 						else {
-							artLista.add(new ArtListEntry(temp[0],temp[1],temp[2]));
+							artLista.add(new ArtListEntry(temp[0],temp[1],temp[2],this));
 						}
 					}
 				}
@@ -57,16 +56,8 @@ public class ArtListaProvider {
 				new ArrayList<HashMap<String, String>>();
 		List<ArtListEntry> sorted = new ArrayList<ArtListEntry>();
 
-
-		String[] columnTags = new String[] {"Släkte", "Familj", "Svenskt namn"};
-
 		//Get Species from file.
 		HashMap<String,String> map;
-
-		//Add header
-		map = new HashMap<String, String>();
-		for(int j=0; j<3; j++)
-			map.put(columnTags[j],columnTags[j]);
 
 		for(ArtListEntry e:artLista)
 
@@ -77,9 +68,9 @@ public class ArtListaProvider {
 							e.getSvensktNamn().startsWith(character.toLowerCase()))
 							)) 
 				sorted.add(e);
-			else
-				Log.d("Strand", "Svenskt namn: "+e.getSvensktNamn()+ 
-						"Starts with "+character+" ? "+e.getSvensktNamn().startsWith(character));
+//			else
+//				Log.d("Strand", "Svenskt namn: "+e.getSvensktNamn()+ 
+//						"Starts with "+character+" ? "+e.getSvensktNamn().startsWith(character));
 
 		//Sort.
 		Collections.sort(sorted);
@@ -93,9 +84,24 @@ public class ArtListaProvider {
 			map.put("Svenskt namn",s.getSvensktNamn());
 			mylistData.add(map);
 		}
+		
 
 
 		return mylistData;
 	}
+	
+	private int sortColumn;
+	public final static int SVENSK_F = 1;
+	public final static int SLÄKTE_F = 2;
+	public final static int FAMILJ_F = 3;
+
+	public void setSortColumn(int columnIdentifier) {
+		sortColumn = columnIdentifier;
+	};
+
+	public int getSortColumn() {
+		return sortColumn;
+	};
+	
 
 }

@@ -23,23 +23,8 @@ public class TableAdapter extends SimpleAdapter {
 	 @Override
 	    public View getView(int position, View convertView, ViewGroup parent) {
 	      View view = super.getView(position, convertView, parent);
-	     
-	      Log.d("Strand","Getcount: "+this.getCount());
-		  if (getCount()==0) 
-		    	 view.setBackgroundColor(Color.LTGRAY);
-		    
-	    	 
-	     
-	     
-	      return view;
+		      return view;
 	    }
 
-	/* (non-Javadoc)
-	 * @see android.widget.SimpleAdapter#getCount()
-	 */
-	@Override
-	public int getCount() {
-		
-		return super.getCount();
-	}
+
 }
