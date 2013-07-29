@@ -46,6 +46,15 @@ public class ActivityZoneless extends Activity {
 		((Button)this.findViewById(R.id.tradB)).setOnClickListener(cl);
 		((Button)this.findViewById(R.id.buskB)).setOnClickListener(cl);
 		
+		((Button)this.findViewById(R.id.substratB)).setOnClickListener(new OnClickListener() {
+			Intent intent = new Intent(ActivityZoneless.this, ActivitySubstratSelection.class);
+
+			@Override
+			public void onClick(View v) {
+				startActivity(intent);
+			}});
+		
+		
 	}
 
 }

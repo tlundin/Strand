@@ -10,7 +10,7 @@ public class Provyta implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4483220563308165820L;
+	private static final long serialVersionUID = 4483220563308165821L;
 	/**
 	 * 
 	 */
@@ -19,6 +19,40 @@ public class Provyta implements Serializable {
 	riktning,slutlengeo,slutlenorange,slutlenkal,slutlensupra,slutlenovan,lutninggeo,lutningsupra,vattendjup,marktypgeo,marktypsupra,
 	marktypovan,rekreation,rojning,rojningtid,brygga,stangsel,tacknfaltgeo,tacknfaltsupra,tacknbuskgeo,tacknbusksupra,tackntradgeo,
 	tackntradsupra,vasslen,vasstathet,kriteriestrand,kriterieovan,klippamax,klippalutning,lutningextra;
+	
+
+
+	Calendar datum;
+	
+	double startPEast,startPNorth;
+	
+	Table träd,buskar,arter;
+	
+	String[][] substrat;
+	
+	/**
+	 * @return the substrat
+	 */
+	public String[][] getSubstrat() {
+		return substrat;
+	}
+
+
+	/**
+	 * @param substrat the substrat to set
+	 */
+	public void setSubstrat(String[][] substrat) {
+		this.substrat = substrat;
+	}
+
+
+
+	private boolean isLocked=false;
+
+	public String getpyID() {
+		return pyID;
+	}
+	
 	
 	/**
 	 * @return the lutningextra
@@ -37,29 +71,6 @@ public class Provyta implements Serializable {
 	}
 
 
-
-	Calendar datum;
-	
-	double startPEast,startPNorth;
-	
-	/*List <TrädListEntry>träd;
-	
-	List <BuskListEntry>buskar;
-	
-	List <ArtListEntry>arter;
-	
-	*/
-	Table träd,buskar,arter;
-	
-	
-	
-	private boolean isLocked=false;
-
-	public String getpyID() {
-		return pyID;
-	}
-	
-	
 	
 	/**
 	 * @return the träd

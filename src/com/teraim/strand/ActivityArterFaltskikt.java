@@ -39,6 +39,8 @@ public class ActivityArterFaltskikt extends Activity {
 
 	private ListView myList;
 
+	private TextView initialText;
+	
 	private ArtListaProvider ap;
 
 	private final String[] columnTags = new String[] {"Släkte", "Familj", "Svenskt namn"};
@@ -84,18 +86,18 @@ public class ActivityArterFaltskikt extends Activity {
 		switch (table) {
 		case Strand.TRÄD:
 			myTable = new TableTrees(this,py.getTräd());
-			myProvider  = R.raw.herbs;
+			myProvider  = R.raw.trad;
 			Log.d("Strand","Table set to träd.");
 			break;
 		case Strand.BUSKAR:
-			myProvider = R.raw.buskar;
 			myTable = new TableBuskar(this,py.getBuskar());			
+			myProvider = R.raw.buskar;
 			Log.d("Strand","Table set to buskar.");
 			break;
 
 		case Strand.ARTER:
-			myProvider = R.raw.herbs;
 			myTable = new TableArter(this,py.getArter());
+			myProvider = R.raw.herbs;
 			Log.d("Strand","Table set to fältskikt.");
 			break;
 
@@ -104,6 +106,8 @@ public class ActivityArterFaltskikt extends Activity {
 			break;
 		}
 
+		initialText = new TextView(this);
+		initialText.setText("Välj arter till vänster! ");
 
 
 		buttonPanel = (LinearLayout) this.findViewById(R.id.buttonPanel);
@@ -241,7 +245,7 @@ public class ActivityArterFaltskikt extends Activity {
 			contentPane.addView(myList);
 			break;
 		case ShowInitial:
-			//contentPane.addView(initialText);
+			contentPane.addView(initialText);
 			break;
 
 		}

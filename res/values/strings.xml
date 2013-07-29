@@ -10,6 +10,7 @@
 	<color name="red">#FF0000</color>
 	<color name="green">#3DFA37</color>
   	<color name="yellow">#FAFA37</color>
+  	<color name="light_orange">#edc951</color>
   	<color name="background">#FCFCFA</color>
   
   	<style name="Field_Style">

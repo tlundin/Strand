@@ -34,7 +34,9 @@
         <activity
             android:name="com.teraim.strand.ActivityArterFaltskikt"/>
          <activity
-            android:name="com.teraim.strand.ActivityZoneless"/>
+            android:name="com.teraim.strand.ActivityZoneless"/>        
+         <activity
+            android:name="com.teraim.strand.ActivitySubstratSelection"/>
         
     </application>
 

@@ -25,11 +25,11 @@ Rosaceae,Prunus spinosa,Slån
 Rhamnaceae,Frangula alnus,Brakved
 Fabaceae,Cytisus scoparius,Harris
 Celastraceae,Euonymus europaeus,Benved
-Rhamnaceae,Rhamnus cathartica,Getapel (varför ligger denna här? Flyttas ihop med Brakved?)
+Rhamnaceae,Rhamnus cathartica,Getapel 
 Thymelaeaceae,Daphne mezereum,Tibast
 Elaeagnaceae,Hippophaë rhamnoides,Havtorn
 Cornaceae,Cornus sanguinea,Skogskornell
-Cornaceae,Cornus alba ssp. stolonifera,Videkornell (Är den särskilt intressant?)
+Cornaceae,Cornus alba ssp. stolonifera,Videkornell
 Araliaceae,Hedera helix,Murgröna
 Oleaceae,Ligustrum vulgare,Liguster
 Oleaceae,Syringa vulgaris,Syren
@@ -40,4 +40,5 @@ Caprifoliaceae,Symphoricarpos albus,Snöbär
 Caprifoliaceae,Lonicera caprifolium,Kaprifol
 Caprifoliaceae,Lonicera xylosteum,Skogstry
 Caprifoliaceae,Lonicera caerulea,Blåtry
+-,-,Övriga buskar
 
