@@ -35,6 +35,14 @@ public class Table implements Serializable {
 			Log.e("Strand","Wrong number of columns ("+entries.length+"). Expected "+noOfCols);
 
 	}
+	
+	public void saveRow(String id, List<String> ets) {
+		if (ets.size()==noOfCols) {
+			String[] array = new String[ets.size()];
+			ets.toArray(array);
+			rowlist.put(id, array);
+		}
+	}
 
 	public Set<Entry<String, String[]>> getTable() {
 		return rowlist.entrySet();
@@ -53,6 +61,9 @@ public class Table implements Serializable {
 	public String getNextId() {
 		return Integer.toString(myID++);
 	}
+
+
+
 
 
 

@@ -1,29 +1,24 @@
 package com.teraim.strand;
 
-import java.io.File;
 import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.teraim.strand.utils.ImageHandler;
 
 public class ActivityTakePicture extends Activity implements LocationListener {
 
@@ -33,10 +28,11 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 	//convenience..
 	Provyta py = Strand.getCurrentProvyta(this);
 	//pictures stored as: /strand/bilder/pyID_NAME
-	String imgPath = Strand.PIC_ROOT_DIR+py.getpyID()+"_";
 	//Map name to button
 	HashMap<String, ImageButton> buttonM = new HashMap<String,ImageButton>();
 	private LocationManager lm;
+	
+	private ImageHandler imgHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +56,14 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 		left= (ImageButton)this.findViewById(R.id.pic_left);
 		right = (ImageButton)this.findViewById(R.id.pic_right);		
 		buttonM.clear();
+
+		//Init pic handler
+		imgHandler = new ImageHandler(this);
+		
+		//Init geoupdate
+		lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+		//Create buttons.
 		initPic(slut,"slut");
 		initPic(sup,"sup");
 		initPic(upp,"upp");
@@ -68,8 +72,7 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 		initPic(right,"right");
 
 
-		//Init geoupdate
-		lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		
 
 		if (lm==null) {
 			Log.e("Strand","Startup of GPS tracking failed in ProvYtaGeoUpdater");
@@ -109,119 +112,24 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 	 */
 	private void initPic(final ImageButton b, final String name) {
 		buttonM.put(name, b);
-		drawButton(b,name);
-		addListener(b,name);
+		imgHandler.drawButton(b,name);
+		imgHandler.addListener(b,name);
 	}
 
 
-	private void drawButton(ImageButton b, String name) {
-		// TODO Auto-generated method stub
-
-
-		//Try to load pic from disk, if any.
-		//To avoid memory issues, we need to figure out how big bitmap to allocate, approximately
-		//Picture is in landscape & should be approx half the screen width, and 1/5th of the height.
-
-		//First get the ration between h and w of the pic.
-		final BitmapFactory.Options options = new BitmapFactory.Options();
-
-		final String imgFileName = imgPath+name+".png";
-		options.inJustDecodeBounds=true;
-		Bitmap bip = BitmapFactory.decodeFile(imgFileName,options);		
-
-		//there is a picture..
-		int realW = options.outWidth;
-		int realH = options.outHeight;
-
-
-		//check if file exists
-		if (realW>0) {
-			double ratio = realH/realW;
-			//Height should not be higher than width.
-			if (ratio >0) {
-				Log.d("Strand", "picture is not landscape. its portrait..");
-			}
-			Log.d("Strand", "realW realH"+realW+" "+realH);
-
-			//Find out screen size.
-			Display display = getWindowManager().getDefaultDisplay();
-			Point size = new Point();
-			display.getSize(size);
-			int sWidth = size.x;
-
-			//Target width should be about half the screen width.
-
-			double tWidth = sWidth/2;
-			//height is then the ratio times this..
-			int tHeight = (int) (tWidth*ratio);
-
-			//use target values to calculate the correct inSampleSize
-			options.inSampleSize = calculateInSampleSize(options, (int)tWidth, tHeight);
-
-			Log.d("Strand"," Calculated insamplesize "+options.inSampleSize);
-			//now create real bitmap using insampleSize
-
-			options.inJustDecodeBounds = false;
-			bip = BitmapFactory.decodeFile(imgFileName,options);
-			if (bip!=null) {
-				b.setImageBitmap(bip);
-			}
-
-		}
-		else {
-			Log.d("Strand","Did not find picture "+imgFileName);
-			//need to set the width equal to the height...
-
-		}
-	}
-
-	private void addListener(ImageButton b, final String name) {
-		// TODO Auto-generated method stub
-
-
-		b.setOnClickListener(new OnClickListener()
-		{
-
-			@Override
-			public void onClick(View v)
-			{
-				Toast.makeText(getBaseContext(),
-						"pic" + name + " selected",
-						Toast.LENGTH_SHORT).show();
-
-				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-				File file = new File(Strand.PIC_ROOT_DIR, py.getpyID()+"_"+name+".png");
-
-				Log.d("Strand","Saving pic "+name);
-				currSaving=name;
-				Uri outputFileUri = Uri.fromFile(file);
-
-				intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-				//				intent.putExtra(Strand.KEY_PIC_NAME, name);
-				startActivityForResult(intent, TAKE_PICTURE);
-
-
-			}
-
-		});
-
-
-	}
-	final int TAKE_PICTURE = 133;
-	private String currSaving = null;
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent myI){
 
-		if (requestCode == TAKE_PICTURE){
+		if (requestCode == ImageHandler.TAKE_PICTURE){
 			if (resultCode == Activity.RESULT_OK) 
 			{
 				Log.d("Strand","picture was taken, result ok");
 				//				String name = myI.getStringExtra(Strand.KEY_PIC_NAME);
+				String currSaving = imgHandler.getCurrentlySaving();
 				if (currSaving!=null) {
 					ImageButton b = buttonM.get(currSaving);
-					drawButton(b,currSaving);
+					imgHandler.drawButton(b,currSaving);
 					Log.d("Strand","Drew button!");
 				} else
 					Log.e("Strand","Did not find pic with name "+currSaving+" in onActRes in TakePic Activity");
@@ -230,30 +138,9 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 			}
 
 		}
-		currSaving=null;
+		
 	}
 
-	public static int calculateInSampleSize(
-			BitmapFactory.Options options, int reqWidth, int reqHeight) {
-		// Raw height and width of image
-		final int height = options.outHeight;
-		final int width = options.outWidth;
-		int inSampleSize = 1;
-
-		if (height > reqHeight || width > reqWidth) {
-
-			// Calculate ratios of height and width to requested height and width
-			final int heightRatio = Math.round((float) height / (float) reqHeight);
-			final int widthRatio = Math.round((float) width / (float) reqWidth);
-
-			// Choose the smallest ratio as inSampleSize value, this will guarantee
-			// a final image with both dimensions larger than or equal to the
-			// requested height and width.
-			inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-		}
-
-		return inSampleSize;
-	}
 	double[] cords = null;
 
 	@Override

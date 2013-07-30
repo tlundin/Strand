@@ -46,6 +46,8 @@ public class ActivitySubstratSelection extends Activity {
 
 
 	static final int NO_OF_COLS  = 5;
+	static final int NO_OF_ROWS  = 5;
+	
 	static final int LENGTH_OF_COLS  = 6;
 
 
@@ -70,7 +72,7 @@ public class ActivitySubstratSelection extends Activity {
 				for (int j=0;j<(LENGTH_OF_COLS-2);j++)
 					row[j] = "["+c+","+j+"]";
 			}
-
+			py.setSubstrat(values);
 		}
 		String[] row;
 		for (int c=0;c<(NO_OF_COLS-1);c++) {
@@ -78,11 +80,6 @@ public class ActivitySubstratSelection extends Activity {
 			for (int j=0;j<(LENGTH_OF_COLS-2);j++)
 				fields[c+1+NO_OF_COLS*(j+1)]=row[j];
 		}
-
-
-
-
-
 
 
 		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -247,6 +244,13 @@ public class ActivitySubstratSelection extends Activity {
 //						String z = (sum!=100)?"<font fgcolor=\"#ffff0000\">"+v+"</font>":"<font fgcolor=\"#00000000\">"+v+"</font>";
 						fields[elem+NO_OF_COLS] = v;
 						adapter.notifyDataSetChanged();
+						
+						String[][] su = py.getSubstrat();
+						for(int i=0;i<NO_OF_COLS-1;i++)
+							for(int j=0;j<NO_OF_ROWS-1;j++)
+						su[i][j]=fields[1+i+(j+1)*NO_OF_COLS];
+								
+						py.setSubstrat(su);
 					}
 
 				});

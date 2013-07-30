@@ -1,6 +1,7 @@
 package com.teraim.strand;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import android.widget.TextView;
 import com.teraim.strand.Strand.PersistenceHelper;
 import com.teraim.strand.dataobjekt.StrandInputData;
 import com.teraim.strand.dataobjekt.StrandInputData.Entry;
+import com.teraim.strand.utils.JSONify;
 
 /**
  * 
@@ -149,6 +151,8 @@ public class ActivityMain extends Activity {
 			provyteArrayAdapter.notifyDataSetChanged();	
 			rutArrayAdapter.notifyDataSetChanged();		 
 		}
+		
+		
 
 	}
 	private EditText etLag;
@@ -297,11 +301,9 @@ public class ActivityMain extends Activity {
 		for (Entry e:es) 
 			if(e.getRuta().equals(selectedRuta)) {
 				provyteArray.add(e.getProvyta());
-				Log.d("Strand","Adding provvyta "+e.getProvyta());
 			}
 		provyteArray.add(0,"-");
 		if (py!=null) {
-			Log.d("Strand","Setting spinner position to "+py.getProvyta());
 			setSpinner(ytSpinner,py.getProvyta());
 		} else
 			ytSpinner.setSelection(0);

@@ -1,60 +1,48 @@
 package com.teraim.strand.utils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.List;
 
-import android.os.Message;
 import android.util.JsonWriter;
+import android.util.Log;
+
+import com.teraim.strand.Provyta;
+import com.teraim.strand.Strand;
 
 public class JSONify {
+	
+	public void test() throws FileNotFoundException, IOException {
+		List<Provyta> pyl = new ArrayList<Provyta>();
+		Provyta py1 = new Provyta("12345");
+		Provyta py2 = new Provyta("678910");
+		pyl.add(py1);
+		pyl.add(py2);
+		File file = new File(Strand.DATA_ROOT_DIR+"test.txt");
+		start(new FileOutputStream(file),pyl);
+	}
 
-	/*
-
-	public void writeJsonStream(OutputStream out, List messages) throws IOException {
+	public void start(OutputStream out, List<Provyta> pyl) throws IOException {
 		JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
 		writer.setIndent("  ");
-		writeMessagesArray(writer, messages);
+		//An array of Provytor.
+		writer.beginArray();
+		for (Provyta py:pyl) 
+			writeYta(writer, py);
+		writer.endArray();
 		writer.close();
-
 	}
-	public void writeMessagesArray(JsonWriter writer, List messages) throws IOException {
-		writer.beginArray();
-		for (Message message : messages) {
-			writeMessage(writer, message);
-		}
-		writer.endArray();
-	}
-
-	public void writeMessage(JsonWriter writer, Message message) throws IOException {
+	public void writeYta(JsonWriter writer, Provyta py) throws IOException {
 		writer.beginObject();
-		writer.name("id").value(message.getId());
-		writer.name("text").value(message.getText());
-		if (message.getGeo() != null) {
-			writer.name("geo");
-			writeDoublesArray(writer, message.getGeo());
-		} else {
-			writer.name("geo").nullValue();
-		}
-		writer.name("user");
-		writeUser(writer, message.getUser());
+		Log.d("Strand","Writing Provyta "+py.getpyID());
+		writer.name("pyID").value(py.getpyID());
 		writer.endObject();
 	}
 
-	public void writeUser(JsonWriter writer, User user) throws IOException {
-		writer.beginObject();
-		writer.name("name").value(user.getName());
-		writer.name("followers_count").value(user.getFollowersCount());
-		writer.endObject();
-	}
 
-	public void writeDoublesArray(JsonWriter writer, List doubles) throws IOException {
-		writer.beginArray();
-		for (Double value : doubles) {
-			writer.value(value);
-		}
-		writer.endArray();
-	}}
-	*/
 }

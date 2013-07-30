@@ -1,15 +1,12 @@
 package com.teraim.strand.dataobjekt;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.RadioButton;
-import android.widget.TextView;
-
-import com.teraim.strand.R;
+import android.view.WindowManager;
 
 public class InputAlertBuilder {
 
@@ -26,7 +23,6 @@ public class InputAlertBuilder {
 				alert.setTitle(headerT);
 				alert.setMessage(bodyT);
 				final View inputView = abh.createView();
-				alert.setView(inputView);
 				alert.setPositiveButton("Spara", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {				  
 						abh.setResult(id,inputView,outputView);
@@ -38,8 +34,15 @@ public class InputAlertBuilder {
 						// Canceled.
 					}
 				});	
-
-				alert.show();
+				Dialog d = alert.setView(inputView).create();
+				//WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+			    //lp.copyFrom(d.getWindow().getAttributes());
+			    //lp.height = WindowManager.LayoutParams.FILL_PARENT;
+			    //lp.height = 600;
+			    
+			    d.show();
+			    
+			    //d.getWindow().setAttributes(lp);
 			}		
 		};	
 

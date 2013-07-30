@@ -29,6 +29,7 @@ public abstract class TableBase extends TableLayout {
 			tv = (TextView)header.findViewById(id);
 			if (tv == null) 
 				Log.e("Strand","Did not find column "+columnName[i]);
+			Log.e("Strand","Adding column "+columnName[i]);
 			tv.setText(columnName[i++]);	
 			tv.setTypeface(null,Typeface.BOLD);
 		}

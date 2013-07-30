@@ -18,7 +18,6 @@ import com.teraim.strand.dataobjekt.InputAlertBuilder.AlertBuildHelper;
 
 public class TableTrees extends TableBase {
 
-//	protected TextView avstT,artT,diameterT,antalT;
 	protected EditText avstE,diameterE,antalE;
 	protected int rowC = 0;
 	protected final static int[] columnIds = new int[] {R.id.avst, R.id.art, R.id.diameter,R.id.antal};

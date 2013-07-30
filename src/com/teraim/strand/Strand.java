@@ -24,6 +24,7 @@ public class Strand {
 	
 	//Root for the data objects storing data per provyta.
 	public final static String DATA_ROOT_DIR = path+"/strand/data/";
+	
 	//Root for pictures.
 	public static final String PIC_ROOT_DIR = path+"/strand/bilder/";
 	

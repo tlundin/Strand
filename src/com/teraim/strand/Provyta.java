@@ -10,7 +10,7 @@ public class Provyta implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4483220563308165821L;
+	private static final long serialVersionUID = 4483220563308165822L;
 	/**
 	 * 
 	 */
@@ -21,14 +21,28 @@ public class Provyta implements Serializable {
 	tackntradsupra,vasslen,vasstathet,kriteriestrand,kriterieovan,klippamax,klippalutning,lutningextra;
 	
 
+	//Räknare för default.
+	int driftVallsC = 1;
 
+	
 	Calendar datum;
 	
 	double startPEast,startPNorth;
 	
-	Table träd,buskar,arter;
+	Table träd,buskar,arter,vallar;
 	
 	String[][] substrat;
+
+	
+	/**
+	 * @return the driftVallsC..increase
+	 */
+	public int getDriftVallsC() {
+		return driftVallsC++;
+	}
+
+
+
 	
 	/**
 	 * @return the substrat
@@ -124,6 +138,23 @@ public class Provyta implements Serializable {
 		this.arter = arter;
 	}
 
+	
+
+
+	/**
+	 * @return the vallar
+	 */
+	public Table getVallar() {
+		return vallar;
+	}
+
+
+	/**
+	 * @param vallar the vallar to set
+	 */
+	public void setVallar(Table vallar) {
+		this.vallar = vallar;
+	}
 
 
 	public Provyta(String pyID, String provyta, String ruta, String year,
@@ -737,6 +768,7 @@ public class Provyta implements Serializable {
 	public boolean isLocked() {
 		return isLocked;
 	}
+	
 
 
 
@@ -747,5 +779,6 @@ public class Provyta implements Serializable {
 		träd = new Table(4);
 		arter = new Table(4);
 		buskar = new Table(5);
+		vallar = new Table(12);
 	}
 }
