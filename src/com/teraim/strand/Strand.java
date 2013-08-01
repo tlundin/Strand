@@ -1,5 +1,7 @@
 package com.teraim.strand;
 
+import com.teraim.strand.dataobjekt.ArtListaProvider;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
@@ -48,10 +50,14 @@ public class Strand {
 	public static final String KEY_STATE = "key_state";
 
 	public static final String KEY_CHAR = "key_char";
+	
+	public static final String KEY_ZONE_DISPLAY_STATE = "zone_display_state";
+
 
 	public static final int ARTER = 1;
 	public static final int TRÄD = 2;
 	public static final int BUSKAR = 3;
+
 
 
 	
@@ -95,6 +101,16 @@ public class Strand {
 
 		} 
 		return currentProvyta;
+	}
+
+	private static ArtListaProvider ap=null;
+	
+	public static ArtListaProvider getArtListaProvider() {
+		return ap;
+	}
+
+	public static void setCurrentArtListaProvider(ArtListaProvider ap) {
+		Strand.ap=ap;
 	}
 	
 	

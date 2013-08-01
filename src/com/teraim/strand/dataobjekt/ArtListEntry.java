@@ -4,18 +4,32 @@ public class ArtListEntry  implements Comparable<ArtListEntry> {
 
 	private String släkte,familj,svensktNamn;
 	private ArtListaProvider ap;
+	private String cType;
 
 
 
-
-	public ArtListEntry(String släkte, String familj, String svensktNamn, ArtListaProvider ap) {
+	public ArtListEntry(String släkte, String familj, String svensktNamn, String cType,ArtListaProvider ap) {
 		super();
 		this.släkte = släkte;
 		this.familj = familj;
 		this.svensktNamn = svensktNamn;
+		//Set cType to "Existence (x) by default if not set in call.
+		this.cType = cType!=null?cType.toLowerCase():"x";
 		this.ap=ap;
 	}
 
+	public boolean isExistence() {
+		return cType.equals("x");
+	}
+	
+	public boolean isCount() {
+		return cType.equals("r")||cType.equals("rt");
+	}
+	
+	public boolean isCoverage() {
+		return cType.equals("t");
+	}
+	
 	/**
 	 * @return the släkte
 	 */

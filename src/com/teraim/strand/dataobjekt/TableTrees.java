@@ -1,5 +1,6 @@
 package com.teraim.strand.dataobjekt;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
@@ -18,9 +19,11 @@ import com.teraim.strand.dataobjekt.InputAlertBuilder.AlertBuildHelper;
 
 public class TableTrees extends TableBase {
 
-	protected EditText avstE,diameterE,antalE;
 	protected int rowC = 0;
+
 	protected final static int[] columnIds = new int[] {R.id.avst, R.id.art, R.id.diameter,R.id.antal};
+	protected final static int[] textviews = columnIds;
+	protected final static int[] editviews = textviews;
 	protected final static String[] columnName = new String[] {"Avstånd","Art","Diameter","Antal"};
 
 
@@ -66,15 +69,29 @@ public class TableTrees extends TableBase {
 					@Override
 					public View createView() {
 						View inputView = LayoutInflater.from(c).inflate(R.layout.tree_table_popup,null);
-						avstE = (EditText)inputView.findViewById(R.id.avst);
-						antalE = (EditText)inputView.findViewById(R.id.antal);
-						diameterE = (EditText)inputView.findViewById(R.id.diameter);							
+						int i = 0;
+						for(int id:textviews) 
+							((EditText)inputView.findViewById(editviews[i++])).setText(((TextView)row.findViewById(id)).getText());
+	
 						return inputView;
 					}
 
 					@Override
 					public void setResult(int resultId, View inputView,
 							View outputView) {
+						List<String> ets = new ArrayList<String>();
+						for(int id:editviews)
+							ets.add(((EditText)inputView.findViewById(id)).getText().toString());
+						int i = 0;
+						for(int id:textviews)  {
+							((TextView)row.findViewById(id)).setText(ets.get(i));
+							Log.d("Strand","Sätter värde "+ets.get(i));
+							i++;
+						}
+						myData.saveRow(myID,ets);
+						
+						
+						/*
 						TextView avstT,antalT,diameterT;
 						avstT = (TextView)outputView.findViewById(R.id.avst);
 						antalT = (TextView)outputView.findViewById(R.id.antal);
@@ -92,6 +109,7 @@ public class TableTrees extends TableBase {
 							diam = diameterE.getText().toString();
 						art = entries[1];
 						myData.saveRow(myID,avst,art,ant,diam);
+						*/
 
 					}}, row)
 				);		

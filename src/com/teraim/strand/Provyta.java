@@ -10,7 +10,7 @@ public class Provyta implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4483220563308165822L;
+	private static final long serialVersionUID = 4483220563308165823L;
 	/**
 	 * 
 	 */
@@ -20,6 +20,27 @@ public class Provyta implements Serializable {
 	marktypovan,rekreation,rojning,rojningtid,brygga,stangsel,tacknfaltgeo,tacknfaltsupra,tacknbuskgeo,tacknbusksupra,tackntradgeo,
 	tackntradsupra,vasslen,vasstathet,kriteriestrand,kriterieovan,klippamax,klippalutning,lutningextra;
 	
+	
+	String blålapp;
+
+	/**
+	 * @return the blålapp
+	 */
+	public String getBlålapp() {
+		return blålapp;
+	}
+
+
+
+
+	/**
+	 * @param blålapp the blålapp to set
+	 */
+	public void setBlålapp(String blålapp) {
+		this.blålapp = blålapp;
+	}
+
+
 
 	//Räknare för default.
 	int driftVallsC = 1;

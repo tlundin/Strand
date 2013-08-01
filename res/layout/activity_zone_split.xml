@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.25"
-            android:background="#8FFFFF"
+            android:background="#E5E5E5"
             android:gravity="center"
             android:text="Supralitoral" />
 
@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.25"
-            android:background="#FFF8FF"
+            android:background="#FFDAB9"
             android:gravity="center"
             android:text="Geolitoral" />
 
@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.25"
-            android:background="#87CEEB"
+            android:background="#C6E2FF"
             android:gravity="center"
             android:text="Hydrolitoral" />
     </LinearLayout>

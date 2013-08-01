@@ -40,10 +40,10 @@ public class ActivityArterFaltskikt extends Activity {
 	private ListView myList;
 
 	private TextView initialText;
-	
+
 	private ArtListaProvider ap;
 
-	private final String[] columnTags = new String[] {"Släkte", "Familj", "Svenskt namn"};
+	private final String[] columnTags = new String[] {"Familj","Släkte","Svenskt namn"};
 	private final int[] columnIds = new int[] {R.id.column1, R.id.column2, R.id.column3};
 	private final static String[] alfabet = {
 		"*","A","B","C","D","E","F",
@@ -153,9 +153,15 @@ public class ActivityArterFaltskikt extends Activity {
 			buttonPanel.addView(b);
 		}
 
-		//Create a provider 
-		ap = new ArtListaProvider(this,myProvider);
-
+		//Create a provider if not existing & cache it.
+		//Otherwise use cashed for less I/O
+		ap = Strand.getArtListaProvider();
+		if (ap != null && ap.getProvider()==myProvider)
+			Log.e("Strand","Using cached artprovider");
+		else {		
+			ap = new ArtListaProvider(this,myProvider);
+			Strand.setCurrentArtListaProvider(ap);
+		}
 		redraw();
 	}
 
@@ -191,7 +197,7 @@ public class ActivityArterFaltskikt extends Activity {
 
 	}
 	private View createTableHeader() {
-		final int[] sortFlags = new int[] {ArtListaProvider.SLÄKTE_F,ArtListaProvider.FAMILJ_F,ArtListaProvider.SVENSK_F};
+		final int[] sortFlags = new int[] {ArtListaProvider.FAMILJ_F,ArtListaProvider.SLÄKTE_F,ArtListaProvider.SVENSK_F};
 		final Map<Integer,Integer> sort = new HashMap<Integer,Integer>();
 		LinearLayout header = (LinearLayout)LayoutInflater.from(getBaseContext()).inflate(R.layout.list_row,null);
 		int count = 0;
@@ -245,7 +251,12 @@ public class ActivityArterFaltskikt extends Activity {
 			contentPane.addView(myList);
 			break;
 		case ShowInitial:
-			contentPane.addView(initialText);
+			if (myTable!=null) {
+				state = ShowTable;
+				redraw();
+			} 
+			else
+				contentPane.addView(initialText);
 			break;
 
 		}

@@ -64,7 +64,7 @@ public class ActivityMain extends Activity {
 		initIfFirstTime();
 		//Load the input data.
 		//For now, load from resources.
-		InputStream is = getResources().openRawResource(R.raw.data);
+		InputStream is = getResources().openRawResource(R.raw.data2);
 		assert(is !=null);
 		//This call will parse the input file and create a singleton data object that can be used statically.
 		StrandInputData.parseInputFile(is);

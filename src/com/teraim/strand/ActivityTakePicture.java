@@ -20,13 +20,12 @@ import android.widget.TextView;
 
 import com.teraim.strand.utils.ImageHandler;
 
-public class ActivityTakePicture extends Activity implements LocationListener {
+public class ActivityTakePicture extends M_Activity implements LocationListener {
 
 	ImageButton slut,sup,upp,ut,left,right;
 	Button gpsB,vidare;
 	TextView gpsT,startP_text;
 	//convenience..
-	Provyta py = Strand.getCurrentProvyta(this);
 	//pictures stored as: /strand/bilder/pyID_NAME
 	//Map name to button
 	HashMap<String, ImageButton> buttonM = new HashMap<String,ImageButton>();
@@ -214,4 +213,6 @@ public class ActivityTakePicture extends Activity implements LocationListener {
 		}
 
 	}
+	
+	
 }

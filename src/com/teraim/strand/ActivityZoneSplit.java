@@ -4,13 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.teraim.strand.dataobjekt.InputAlertBuilder;
-import com.teraim.strand.dataobjekt.InputAlertBuilder.AlertBuildHelper;
-
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -28,6 +23,9 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.teraim.strand.dataobjekt.InputAlertBuilder;
+import com.teraim.strand.dataobjekt.InputAlertBuilder.AlertBuildHelper;
+
 /**
  * 
  * @author Terje
@@ -41,7 +39,7 @@ public class ActivityZoneSplit extends Activity {
 	//HYDRO
 	private static final int ID_StrandTyp = 0;
 	private static final int ID_KustTyp = 1;
-	private static final int ID_VägExponering = 2;
+	private static final int ID_VågExponering = 2;
 	private static final int ID_Vattendjup = 3;
 
 	//EXTRA
@@ -56,8 +54,13 @@ public class ActivityZoneSplit extends Activity {
 	//SUPRA
 	private static final int ID_SlutlenSupra= 30;
 	private static final int ID_LutningSupra= 31;
-	
 
+
+
+	private static final int STATE_EXTRA = 1;
+	private static final int STATE_SUPRA = 2;
+	private static final int STATE_GEO = 3;
+	private static final int STATE_HYDRO = 4;
 
 
 
@@ -69,6 +72,8 @@ public class ActivityZoneSplit extends Activity {
 
 	//convenience..
 	Provyta py = Strand.getCurrentProvyta(this);
+	private int myDisplayState;
+
 
 
 
@@ -76,6 +81,9 @@ public class ActivityZoneSplit extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		if (savedInstanceState !=null) {
+			myDisplayState = savedInstanceState.getInt(Strand.KEY_ZONE_DISPLAY_STATE);
+		}
 		setContentView(R.layout.activity_zone_split);
 
 		extraT = (TextView)this.findViewById(R.id.extraT);
@@ -95,22 +103,9 @@ public class ActivityZoneSplit extends Activity {
 			@Override
 			public void onClick(View v) {
 
+				myDisplayState = STATE_EXTRA;
+				goExtra();
 
-				bg.removeAllViews();
-
-				//SlutLängd Extralitoral
-				addNormalInput(bg,"Slutlängd Extra","Avstånd från medelvattenlinjen till där hela transekten slutar",py.getSlutlenovan(),ID_SlutlenOvan,InputType.TYPE_CLASS_NUMBER);
-
-				
-				//Trädförekomst
-				addBooleanInput(bg,"Trädförekomst","Ifall det inte är fastland, finns det ett skogsbetsånd > 0.25 ha (1/0)?",py.getTrädförekomst(),ID_TradForekomst);
-
-				
-				//Lutning
-
-				addNormalInput(bg,"Lutning Supra","Mätt lutning i Extralittoralen (grader)",py.getLutningextra(),ID_LutningExtra,InputType.TYPE_CLASS_NUMBER);
-
-				
 			}});
 
 
@@ -118,18 +113,10 @@ public class ActivityZoneSplit extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				myDisplayState = STATE_SUPRA;
+				goSupra();
 
-				bg.removeAllViews();
 
-				//SlutLängd Extralitoral
-				addNormalInput(bg,"Slutlängd Supra","Avstånd från medelvattenlinjen till där Supralittoralen slutar",py.getSlutlensupra(),ID_SlutlenSupra,InputType.TYPE_CLASS_NUMBER);
-						
-				//Lutning 
-				
-				addNormalInput(bg,"Lutning Supra","Mätt lutning i supralittralen (grader)",py.getLutningsupra(),ID_LutningSupra,InputType.TYPE_CLASS_NUMBER);
-
-			
-			
 			}});
 
 
@@ -137,60 +124,140 @@ public class ActivityZoneSplit extends Activity {
 
 			@Override
 			public void onClick(View v) {
-
-				bg.removeAllViews();
-
-				//Strandtyp
-				List<String> values = new ArrayList<String>(Arrays.asList("1","2","3","4","5"));
-				List<String> entries = new ArrayList<String>(Arrays.asList("Klippa/Häll","Block/Grus","Sand","Strandäng/Våtmark","Konstruerad"));
-				addSpinnerInput(bg,"Strandtyp","Klassning 1-5",py.getStrandtyp(),ID_StrandTyp,entries,values);
-
-				//Kusttyp
-				values = new ArrayList<String>(Arrays.asList("fastland","öar","skär","grund"));
-				entries = values;
-				addSpinnerInput(bg,"Kusttyp","Välj bland nedanstående",py.getKusttyp(),ID_KustTyp,entries,values);
-
-				//Vägexponering
-				addNormalInput(bg,"Vägexponering","Bedöm exponeringklass. Jämför med utdata och ändra om det (uppenbart) ej stämmer",py.getExponering(),ID_VägExponering,InputType.TYPE_CLASS_NUMBER);
-
-				//Vattendjup
-				addNormalInput(bg,"Vattendjup","Mätt vattendjup 3 m utanför medelvattenlinjen",py.getExponering(),ID_Vattendjup,InputType.TYPE_CLASS_NUMBER);
-				
+				myDisplayState = STATE_HYDRO;
+				goHydro();
 			}});
 
-		
+
 		geoT.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-
-				bg.removeAllViews();
-
-				
-				//SlutLängd 
-				addNormalInput(bg,"Slutlängd Geo","Avstånd längs transekten från medelvattenlinjen till där geolittoralen slutar (dm)",py.getSlutlengeo(),ID_SlutlenGeo,InputType.TYPE_CLASS_NUMBER);
-			
-				//Lutning 
-				
-				addNormalInput(bg,"Lutning Geo","Mätt lutning i geolittralen (grader)",py.getLutninggeo(),ID_LutningGeo,InputType.TYPE_CLASS_NUMBER);
-			
-			
+				myDisplayState = STATE_GEO;
+				goGeo();
 			}});
+		
+		
+		switch (myDisplayState) {
+		case STATE_GEO:
+			goGeo();
+			break;
+		case STATE_EXTRA:
+			goExtra();
+			break;
+		case STATE_HYDRO:
+			goHydro();
+			break;
+		case STATE_SUPRA:
+			goSupra();
+			break;
+		}
+		
 	}
 
 
 
 
-	private View createClickableField(ViewGroup bg,String headerT,String defValue) {
+	protected void goSupra() {
+		bg.removeAllViews();
 
-		View view = LayoutInflater.from(getBaseContext()).inflate(R.layout.editfield,null);
+		//SlutLängd Extralitoral
+		addNormalInput(bg,"Slutlängd Supra","Avstånd från medelvattenlinjen till där Supralittoralen slutar",py.getSlutlensupra(),ID_SlutlenSupra,InputType.TYPE_CLASS_NUMBER);
+
+		//Lutning 
+
+		addNormalInput(bg,"Lutning Supra","Mätt lutning i supralittralen (grader)",py.getLutningsupra(),ID_LutningSupra,InputType.TYPE_CLASS_NUMBER);
+	
+	}
+
+
+
+
+	protected void goGeo() {
+		bg.removeAllViews();
+
+
+		//SlutLängd 
+		addNormalInput(bg,"Slutlängd Geo","Avstånd längs transekten från medelvattenlinjen till där geolittoralen slutar (dm)",py.getSlutlengeo(),ID_SlutlenGeo,InputType.TYPE_CLASS_NUMBER);
+
+		//Lutning 
+
+		addNormalInput(bg,"Lutning Geo","Mätt lutning i geolittralen (grader)",py.getLutninggeo(),ID_LutningGeo,InputType.TYPE_CLASS_NUMBER);
+
+
+		
+	}
+
+
+
+
+	protected void goHydro() {
+		bg.removeAllViews();
+
+		//Strandtyp
+		List<String> values;// = new ArrayList<String>(Arrays.asList("1","2","3","4","5"));
+		List<String> entries = new ArrayList<String>(Arrays.asList("Klippa/Häll","Block/Grus","Sand","Strandäng/Våtmark","Konstruerad"));
+		values = entries;
+		addSpinnerInput(bg,"Strandtyp","Klassning 1-5",py.getStrandtyp(),ID_StrandTyp,entries,values);
+
+		//Kusttyp
+		values = new ArrayList<String>(Arrays.asList("fastland","öar","skär","grund"));
+		entries = values;
+		addSpinnerInput(bg,"Kusttyp","Välj bland nedanstående",py.getKusttyp(),ID_KustTyp,entries,values);
+
+		//Vågexponering
+		addNormalInput(bg,"Vågexponering","Bedöm exponeringklass. Jämför med utdata och ändra om det (uppenbart) ej stämmer",py.getExponering(),ID_VågExponering,InputType.TYPE_CLASS_NUMBER);
+
+		//Vattendjup
+		addNormalInput(bg,"Vattendjup","Mätt vattendjup 3 m utanför medelvattenlinjen",py.getExponering(),ID_Vattendjup,InputType.TYPE_CLASS_NUMBER);
+
+	}
+
+
+
+
+	protected void goExtra() {
+		bg.removeAllViews();
+
+		//SlutLängd Extralitoral
+		addNormalInput(bg,"Slutlängd Extra","Avstånd från medelvattenlinjen till där hela transekten slutar",py.getSlutlenovan(),ID_SlutlenOvan,InputType.TYPE_CLASS_NUMBER);
+
+
+		//Trädförekomst
+		addBooleanInput(bg,"Trädförekomst","Ifall det inte är fastland, finns det ett skogsbetsånd > 0.25 ha (1/0)?",py.getTrädförekomst(),ID_TradForekomst);
+
+
+		//Lutning
+
+		addNormalInput(bg,"Lutning Supra","Mätt lutning i Extralittoralen (grader)",py.getLutningextra(),ID_LutningExtra,InputType.TYPE_CLASS_NUMBER);
+
+	}
+
+
+
+
+	public TextView getTextView(View v) {
+		return (TextView)v.findViewById(R.id.editfieldinput);
+	}
+	
+	private View createClickableField(ViewGroup bg,String headerT,String defValue) {
+		return createClickableField(bg,headerT,defValue,R.layout.clickable_field_normal);
+	}
+	private View createClickableListField(ViewGroup bg,String headerT,String defValue) {
+		return createClickableField(bg,headerT,defValue,R.layout.clickable_field_list);
+	}
+	private View createClickableYesNoField(ViewGroup bg,String headerT,String defValue) {
+		return createClickableField(bg,headerT,defValue,R.layout.clickable_field_yes_no);
+	}
+
+	private View createClickableField(ViewGroup bg,String headerT,String defValue, int res) {
+		View view = LayoutInflater.from(getBaseContext()).inflate(res,null);
 		bg.addView(view);
 		TextView header = (TextView)view.findViewById(R.id.editfieldtext);
 		SpannableString content = new SpannableString(headerT);
 		content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
 		header.setText(content);
-		final TextView et = (TextView)view.findViewById(R.id.editfieldinput);
-		et.setText(defValue);
+		getTextView(view).setText(defValue);
 		view.setClickable(true);
 		return view;	
 	}
@@ -198,7 +265,7 @@ public class ActivityZoneSplit extends Activity {
 
 
 	private View addBooleanInput(ViewGroup bg,final String headerT,final String bodyT,final String currValue,final int id) {
-		final View v = createClickableField(bg,headerT,currValue);
+		final View v = createClickableYesNoField(bg,headerT,currValue);
 
 		final AlertBuildHelper abh = new AlertBuildHelper(getBaseContext()) {
 			@Override
@@ -218,7 +285,7 @@ public class ActivityZoneSplit extends Activity {
 			}
 			@Override
 			public void setResult(int id, View inputView,View outputView) {
-				setStringValue(id,((RadioButton)inputView.findViewById(R.id.ja)).isChecked()?"1":"0",v);
+				setStringValue(id,((RadioButton)inputView.findViewById(R.id.ja)).isChecked()?"1":"0",outputView);
 			}};		
 
 			v.setOnClickListener(InputAlertBuilder.createAlert(id,headerT,bodyT,abh,v));
@@ -228,13 +295,13 @@ public class ActivityZoneSplit extends Activity {
 
 	private View addSpinnerInput(ViewGroup bg,final String headerT,final String bodyT,final String currValue,final int id, final List<String>entries, final List<String>values) {
 
-		final View v = createClickableField(bg,headerT,currValue);
+		final View v = createClickableListField(bg,headerT,currValue);
 
 		final AlertBuildHelper abh = new AlertBuildHelper(getBaseContext()) {
 			@Override
 			public View createView() {
 				// Set an EditText view to get user input 
-				final Spinner spinner = new Spinner(c);
+				final Spinner spinner = (Spinner)LayoutInflater.from(c).inflate(R.layout.edit_field_spinner, null);
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(c, android.R.layout.simple_spinner_dropdown_item, entries);		
 				spinner.setAdapter(adapter);
 
@@ -258,7 +325,7 @@ public class ActivityZoneSplit extends Activity {
 			@Override
 			public View createView() {
 				// Set an EditText view to get user input 
-				final EditText input = new EditText(c);
+				final EditText input = (EditText)LayoutInflater.from(c).inflate(R.layout.edit_field, null);
 
 				input.setText(et.getText());
 				//input.setInputType(inputType);
@@ -279,60 +346,64 @@ public class ActivityZoneSplit extends Activity {
 
 
 	private void setStringValue(int id, String value, View v) { 
-			switch(id) {
-			case ID_SlutlenOvan:
-				py.setSlutlenovan(value);
-				break;
+		switch(id) {
+		case ID_SlutlenOvan:
+			py.setSlutlenovan(value);
+			break;
 
-			case ID_SlutlenGeo:
-				py.setSlutlengeo(value);
-				break;
-			case ID_StrandTyp:
-				py.setStrandtyp(value);
-				break;
+		case ID_SlutlenGeo:
+			py.setSlutlengeo(value);
+			break;
+		case ID_StrandTyp:
+			py.setStrandtyp(value);
+			break;
 
-			case ID_KustTyp:
-				py.setKusttyp(value);
-				break;
+		case ID_KustTyp:
+			py.setKusttyp(value);
+			break;
 
-			case ID_TradForekomst:
-				py.setTrädförekomst(value);
-				break;
-			
-			case ID_VägExponering:
-				py.setExponering(value);
-				break;
-				
-			case ID_SlutlenSupra:
-				py.setSlutlensupra(value);
-				break;
-			
-			case ID_LutningGeo:
-				py.setLutninggeo(value);
-				break;
-			case ID_LutningSupra:
-				py.setLutningsupra(value);
-				break;
-			case ID_LutningExtra:
-				py.setLutningextra(value);
-				break;
-			case ID_Vattendjup:
-				py.setVattendjup(value);
-				break;
-			}
-			
+		case ID_TradForekomst:
+			py.setTrädförekomst(value);
+			break;
+
+		case ID_VågExponering:
+			py.setExponering(value);
+			break;
+
+		case ID_SlutlenSupra:
+			py.setSlutlensupra(value);
+			break;
+
+		case ID_LutningGeo:
+			py.setLutninggeo(value);
+			break;
+		case ID_LutningSupra:
+			py.setLutningsupra(value);
+			break;
+		case ID_LutningExtra:
+			py.setLutningextra(value);
+			break;
+		case ID_Vattendjup:
+			py.setVattendjup(value);
+			break;
+
+
+		}
+		getTextView(v).setText(value);
+
 	}
 
 
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-	   Log.d("Strand","onsaveinstance called");
+		savedInstanceState.putInt(Strand.KEY_ZONE_DISPLAY_STATE, myDisplayState);
+		Log.d("Strand","onsaveinstance called");
 		//Spara värden
 		Persistent.onSave(py);
-	    super.onSaveInstanceState(savedInstanceState);
+		super.onSaveInstanceState(savedInstanceState);
 	}
-	
+
 	public void onVidare(View v) {
 		Log.d("Strand","onvidare called");
 		Intent i = new Intent(this, ActivityZoneless.class);

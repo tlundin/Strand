@@ -14,6 +14,8 @@ import android.util.Log;
 
 public class ArtListaProvider {
 
+	int myProvider;
+	
 	private List<ArtListEntry> artLista = new ArrayList<ArtListEntry>();
 
 	//Wrap input resource.
@@ -21,22 +23,25 @@ public class ArtListaProvider {
 	public ArtListaProvider(Context c, int resourceId) {
 		InputStream is = c.getResources().openRawResource(resourceId);
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		String readLine = null;
-
+		String readLine = null,cType=null;
+		myProvider = resourceId;
 		try {
+			int rowC=0;
 			// While the BufferedReader readLine is not null 
 			while ((readLine = br.readLine()) != null) {
 				if (readLine !=null) {
 					String[] temp = readLine.split(",");
 					if (temp!=null) {
-						if (temp.length!=3) 
-							Log.e("Strand","Suspicious number of elements in row.");
-						else {
-							artLista.add(new ArtListEntry(temp[0],temp[1],temp[2],this));
-						}
-					}
-				}
+						cType = (temp.length==4)?temp[3]:null; 
+						if (temp.length>=3)
+							artLista.add(new ArtListEntry(temp[0],temp[1],temp[2],cType,this));
+						else
+							Log.e("Strand","To few elems at line "+rowC+" in raw file. Number: "+temp.length+" row: "+readLine);
+					} else
+						Log.e("Strand","Could not read line "+rowC+" in raw file.");
 
+				}
+				rowC++;
 			}
 
 			// Close the InputStream and BufferedReader
@@ -47,8 +52,23 @@ public class ArtListaProvider {
 			e.printStackTrace();
 		}
 	}
-	//Get all species starting with provided character 
-
+	
+	//Get species with provided name
+	
+	public ArtListEntry getArt(String name) {
+		if (artLista!=null) {
+			for(ArtListEntry ale:artLista) {
+				if (ale.getSvensktNamn().equals(name))
+					return ale;
+			}
+		}
+		return null;
+	}
+	
+	
+	
+	
+	//Get all species starting with provided character
 	public ArrayList<HashMap<String, String>> getArter(String character) {
 
 		//returnvalue
@@ -68,9 +88,9 @@ public class ArtListaProvider {
 							e.getSvensktNamn().startsWith(character.toLowerCase()))
 							)) 
 				sorted.add(e);
-//			else
-//				Log.d("Strand", "Svenskt namn: "+e.getSvensktNamn()+ 
-//						"Starts with "+character+" ? "+e.getSvensktNamn().startsWith(character));
+		//			else
+		//				Log.d("Strand", "Svenskt namn: "+e.getSvensktNamn()+ 
+		//						"Starts with "+character+" ? "+e.getSvensktNamn().startsWith(character));
 
 		//Sort.
 		Collections.sort(sorted);
@@ -84,12 +104,12 @@ public class ArtListaProvider {
 			map.put("Svenskt namn",s.getSvensktNamn());
 			mylistData.add(map);
 		}
-		
+
 
 
 		return mylistData;
 	}
-	
+
 	private int sortColumn;
 	public final static int SVENSK_F = 1;
 	public final static int SLÄKTE_F = 2;
@@ -101,7 +121,11 @@ public class ArtListaProvider {
 
 	public int getSortColumn() {
 		return sortColumn;
+	}
+
+	public int getProvider() {
+		return myProvider;
 	};
-	
+
 
 }
