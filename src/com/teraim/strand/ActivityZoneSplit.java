@@ -32,7 +32,7 @@ import com.teraim.strand.dataobjekt.InputAlertBuilder.AlertBuildHelper;
  *
  * Class that allows dividing beach into zones.
  */
-public class ActivityZoneSplit extends Activity {
+public class ActivityZoneSplit extends M_Activity {
 
 
 
@@ -399,8 +399,6 @@ public class ActivityZoneSplit extends Activity {
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putInt(Strand.KEY_ZONE_DISPLAY_STATE, myDisplayState);
 		Log.d("Strand","onsaveinstance called");
-		//Spara värden
-		Persistent.onSave(py);
 		super.onSaveInstanceState(savedInstanceState);
 	}
 

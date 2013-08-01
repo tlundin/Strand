@@ -1,13 +1,15 @@
 package com.teraim.strand.dataobjekt;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import android.util.Log;
+
+import com.teraim.strand.Provyta;
 
 public class Table implements Serializable {
 
@@ -17,10 +19,12 @@ public class Table implements Serializable {
 	private int noOfCols;
 	private Map<String,String[]> rowlist;
 	private int myID = 0;
+	private Provyta mama;
 
-	public Table(int noOfCols) {
+	public Table(int noOfCols, Provyta mother) {
 		this.noOfCols = noOfCols;
-		rowlist = new HashMap<String,String[]>();
+		rowlist = new LinkedHashMap<String,String[]>();
+		mama = mother;
 	}
 
 
@@ -30,6 +34,7 @@ public class Table implements Serializable {
 		if (entries.length == noOfCols) {
 			rowlist.put(id, entries);
 			Log.d("Strand","Added row of data to table ");
+			mama.setSaved(false);
 		}
 		else
 			Log.e("Strand","Wrong number of columns ("+entries.length+"). Expected "+noOfCols);
@@ -41,6 +46,7 @@ public class Table implements Serializable {
 			String[] array = new String[ets.size()];
 			ets.toArray(array);
 			rowlist.put(id, array);
+			mama.setSaved(false);			
 		}
 	}
 
@@ -60,6 +66,26 @@ public class Table implements Serializable {
 
 	public String getNextId() {
 		return Integer.toString(myID++);
+	}
+
+
+	public int getRowCount() {
+		return rowlist.size();
+	}
+
+	public String[] getRow(String key) {
+		return rowlist.get(key);
+	}
+
+	public String getLastKey() {
+		Set<String> set = rowlist.keySet();
+		String[] array = set.toArray(new String[0]);
+		int length = array.length;
+		String lastkey=null;
+		if (length>0)
+			lastkey = array[length-1];
+		Log.d("Strand", "I believe the last key was "+lastkey);
+		return lastkey;
 	}
 
 

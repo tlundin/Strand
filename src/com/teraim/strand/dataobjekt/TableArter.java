@@ -43,9 +43,9 @@ public class TableArter extends TableBase {
 		entries[2]="";
 		entries[3]="";
 		String myID = myData.getNextId();
-		addRow(myID,entries);
+		addRow(myID,entries).performClick();
 		myData.saveRow(myID, name,"","","");
-
+		
 
 	}
 
@@ -57,7 +57,7 @@ public class TableArter extends TableBase {
 	 */
 
 	@Override
-	public void addRow(final String myID, final String[] entries) {
+	public TableRow addRow(final String myID, final String[] entries) {
 		final TableRow row = super.createRow(R.layout.row_arter_table);
 		assert(row!=null);
 
@@ -216,7 +216,8 @@ public class TableArter extends TableBase {
 
 
 		addView(row);
-
+		return row;
+		
 	}
 
 

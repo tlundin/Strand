@@ -7,46 +7,44 @@
 
 
     <Button
-        android:id="@+id/arterB"
+        android:id="@+id/orterB"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Fältskikt" />
+        android:text="Örter" />
 
     <Button
-        android:id="@+id/tradB"
+        android:id="@+id/risB"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Träd" />
+        android:text="Ris" />
 
     <Button
-        android:id="@+id/buskB"
+        android:id="@+id/graminidB"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Buskar" />
+        android:text="Graminider" />
     
     <Button
-        android:id="@+id/substratB"
+        android:id="@+id/ormB"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Substrat" />
+        android:text="Ormbunkar" />
     
-        <Button
-        android:id="@+id/strandVallarB"
+   <Button
+        android:id="@+id/mossorB"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Driftvallar" />
-        
-        <Button
-        android:id="@+id/habitatB"
+        android:text="Mossor" />
+  <Button
+        android:id="@+id/lavarB"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Habitat" />
-        
-    
+        android:text="Lavar" />
+   
 </LinearLayout>

@@ -43,6 +43,8 @@ public class Persistent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		//set saved flag.
+		py.setSaved(true);
 	}
 	
 	public static Provyta onLoad (String pyID) {
@@ -95,7 +97,10 @@ public class Persistent {
 	
 		if (obj instanceof Provyta)
 		{
-			return (Provyta) obj;
+			Provyta py = ((Provyta)obj);
+			py.setSaved(true);
+			return py;
+			
 		} else
 			Log.e("Strand", "persisted object was not of type Provyta. Very strange indeed");
 		

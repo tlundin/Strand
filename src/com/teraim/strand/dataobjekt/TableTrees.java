@@ -42,14 +42,14 @@ public class TableTrees extends TableBase {
 		entries[2]="";
 		entries[3]="";
 		String myID = myData.getNextId();
-		addRow(myID,entries);
+		addRow(myID,entries).performClick();
 		myData.saveRow(myID, "",name,"","");
 	}
 
 	
 	//creates a row. Will return the row number of the created row.
 
-	protected void addRow(final String myID, final String[] entries) {
+	protected TableRow addRow(final String myID, final String[] entries) {
 
 
 		final TableRow row = super.createRow(R.layout.row_trees_table);
@@ -123,7 +123,7 @@ public class TableTrees extends TableBase {
 
 
 		addView(row);
-		
+		return row;
 	}
 
 

@@ -1,63 +1,124 @@
 package com.teraim.strand;
 
-import com.teraim.nils.CommonVars;
-import com.teraim.nils.DataTypes.Provyta;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
-import android.util.Log;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 public class M_Activity extends Activity {
 
-	
-	Provyta py = Strand.getCurrentProvyta(this);
-	
-	
+
+	protected Provyta py = Strand.getCurrentProvyta(this);
+
+	private Timer timer;
+
+	private MenuItem saveStat;
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		CreateMenu(menu);
+
+		saveStat = menu.add(0, 0, 0, "");
+		saveStat.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		menu.add(0, 1, 1, "R: "+py.getRuta()).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		//mnu1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		menu.add(0, 2, 2, "PY: "+py.getProvyta()).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);		
+		menu.add(0, 3, 3, "Blå Lapp").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
+
+
+
+	class CheckSaveStatusTask extends TimerTask {
+		public void run() {
+			runOnUiThread(new Runnable() {
+			     public void run() {
+			    	 if(saveStat!=null) {
+						if(py.isSaved())
+							saveStat.setIcon(R.drawable.saved);
+						else {
+							saveStat.setIcon(null);
+							saveStat.setTitle("Unsaved");
+						}
+			    	 }
+			    }
+			});
+		}
+	}
+
+
+
+	@Override
+	protected void onResume() {
+		//Timer to update save status every second.
+		timer = new Timer();
+		timer.scheduleAtFixedRate(new CheckSaveStatusTask(),0, 1000);	
+		super.onResume();
+
+
+
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		timer.cancel();
+		timer = null;
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		return MenuChoice(item);
-	}
 
-	MenuItem mnu1 = null,mnu2 = null,mnu3=null,mnu4=null;
-	private void CreateMenu(Menu menu)
-	{
-		mnu1 = menu.add(0, 0, 0, "");
-		mnu1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		mnu2 = menu.add(0, 1, 1, "");
-		mnu2.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		mnu3 = menu.add(0, 2, 2, "");
-		mnu3.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		mnu4 = menu.add(0, 3, 3,"");
-		mnu4.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		MenuItem mnu5 = menu.add(0, 4, 4, "Item 5");
-		mnu5.setIcon(android.R.drawable.ic_menu_preferences);
-		mnu5.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		refreshStatusRow();
-	}
+		switch (item.getItemId()) {
 
-	protected void refreshStatusRow() {
-		Log.d("NILS","Refreshing status row");
-		if (mnu1!=null) {
-			String p="?";
-			Provyta py = CommonVars.cv().getProvyta();
-			if (py!=null)
-				p=py.getId();
-			mnu1.setTitle("Ruta/Provyta: "+CommonVars.cv().getRuta().getId()+"/"+p);
+		case 0:			
+			break;
+		case 1:
+			break;
+		case 3:
+			
+			AlertDialog.Builder alert = new AlertDialog.Builder(this);
+			alert.setTitle("Blå lapp");	
+
+			final EditText inputView =(EditText)LayoutInflater.from(this).inflate(R.layout.blue, null);
+
+			inputView.setText(py.getBlålapp());
+
+			alert.setPositiveButton("Spara", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {				  
+					py.setBlålapp(inputView.getText().toString());
+				}
+
+			});
+			alert.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					// Canceled.
+				}
+			});	
+			Dialog d = alert.setView(inputView).create();
+			//WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+			//lp.copyFrom(d.getWindow().getAttributes());
+			//lp.height = WindowManager.LayoutParams.FILL_PARENT;
+			//lp.height = 600;
+
+			d.show();
+
+			break;
+
 		}
-		if (mnu2!=null)
-			mnu2.setTitle("Synkning: "+CommonVars.cv().getSyncStatusS());
-		if (mnu3!=null)
-			mnu3.setTitle("Användare: "+CommonVars.cv().getUserName());
-		if (mnu4!=null)
-			mnu4.setTitle("Färg: "+CommonVars.cv().getDeviceColor());
-		
+		return false;
+
 	}
+
+
+
 }

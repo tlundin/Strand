@@ -1,6 +1,5 @@
 package com.teraim.strand;
 
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,7 +21,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ActivitySubstratSelection extends Activity {
+public class ActivitySubstratSelection extends M_Activity {
 
 	GridView gridView;
 

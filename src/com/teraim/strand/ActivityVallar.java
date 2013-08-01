@@ -1,6 +1,5 @@
 package com.teraim.strand;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -11,7 +10,7 @@ import com.teraim.strand.dataobjekt.Table;
 import com.teraim.strand.dataobjekt.TableVallar;
 import com.teraim.strand.utils.ImageHandler;
 
-public class ActivityVallar extends Activity {
+public class ActivityVallar extends M_Activity {
 
 	private final Provyta py = Strand.getCurrentProvyta(this);
 	private TableVallar tv;

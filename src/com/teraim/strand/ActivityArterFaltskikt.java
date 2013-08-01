@@ -32,7 +32,7 @@ import com.teraim.strand.dataobjekt.TableTrees;
  * @author Terje
  *
  */
-public class ActivityArterFaltskikt extends Activity {
+public class ActivityArterFaltskikt extends M_Activity {
 
 
 	private LinearLayout buttonPanel,contentPane;
@@ -86,19 +86,39 @@ public class ActivityArterFaltskikt extends Activity {
 		switch (table) {
 		case Strand.TRÄD:
 			myTable = new TableTrees(this,py.getTräd());
-			myProvider  = R.raw.trad;
+			myProvider  = R.raw.strandinventering_arter_trad;
 			Log.d("Strand","Table set to träd.");
 			break;
 		case Strand.BUSKAR:
 			myTable = new TableBuskar(this,py.getBuskar());			
-			myProvider = R.raw.buskar;
+			myProvider = R.raw.strandinventering_arter_buskar;
 			Log.d("Strand","Table set to buskar.");
 			break;
 
-		case Strand.ARTER:
+		case Strand.GRAMINIDER:
 			myTable = new TableArter(this,py.getArter());
-			myProvider = R.raw.herbs;
-			Log.d("Strand","Table set to fältskikt.");
+			myProvider = R.raw.strandinventering_arter_graminider;
+			Log.d("Strand","Table set to graminider.");
+			break;
+		case Strand.LAVAR:
+			myTable = new TableArter(this,py.getArter());
+			myProvider = R.raw.strandinventering_arter_lavar;
+			Log.d("Strand","Table set to lavar.");
+			break;
+		case Strand.MOSSOR:
+			myTable = new TableArter(this,py.getArter());
+			myProvider = R.raw.strandinventering_arter_mossor;
+			Log.d("Strand","Table set to mossor.");
+			break;
+		case Strand.ORTER:
+			myTable = new TableArter(this,py.getArter());
+			myProvider = R.raw.strandinventering_arter_orter;
+			Log.d("Strand","Table set to örter.");
+			break;
+		case Strand.RIS:
+			myTable = new TableArter(this,py.getArter());
+			myProvider = R.raw.strandinventering_arter_ris;
+			Log.d("Strand","Table set to ris.");
 			break;
 
 		default:

@@ -36,14 +36,14 @@ public class TableBuskar extends TableBase {
 		entries[3]="";
 		entries[4]="";
 		String myID = myData.getNextId();
-		addRow(myID,entries);
+		addRow(myID,entries).performClick();
 		myData.saveRow(myID, "",name,"","","");
 	}
 
 	
 	//creates a row. Will return the row number of the created row.
 
-	protected void addRow(final String myID, final String[] entries) {
+	protected TableRow addRow(final String myID, final String[] entries) {
 
 
 		final TableRow row = super.createRow(R.layout.row_buske_table);
@@ -60,7 +60,7 @@ public class TableBuskar extends TableBase {
 		row.setTag(myID);		
 		row.setOnClickListener(
 
-				InputAlertBuilder.createAlert(-1, "Träd","Inmatning för "+entries[1]+".", 
+				InputAlertBuilder.createAlert(-1, "Buskar","Inmatning för "+entries[1]+".", 
 						new AlertBuildHelper(TableBuskar.this.getContext()){
 
 					@Override
@@ -110,8 +110,8 @@ public class TableBuskar extends TableBase {
 			}});
 
 
-		addView(row);
-		
+		 addView(row);
+		 return row;
 	}
 
 

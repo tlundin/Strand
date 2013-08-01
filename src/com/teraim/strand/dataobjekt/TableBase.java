@@ -43,13 +43,14 @@ public abstract class TableBase extends TableLayout {
 	
 	//Convenience...translate Entry into key-value.
 	protected void addRow(Entry<String, String[]> row) {
+		Log.d("Strand","Trying to add "+row.getValue());
 		addRow(row.getKey(),row.getValue());
 	}
 	
 	
 	public abstract void addRow(String name);
 	
-	protected abstract void addRow(final String myID, final String[] entries);
+	protected abstract TableRow addRow(final String myID, final String[] entries);
 	
 	public void init(int headerLayoutId, int[] colIDs, String[] colNames) {
 		createHeader(headerLayoutId,colIDs,colNames);

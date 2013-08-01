@@ -10,7 +10,7 @@ public class Provyta implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4483220563308165823L;
+	private static final long serialVersionUID = 4483220563308165825L;
 	/**
 	 * 
 	 */
@@ -21,7 +21,48 @@ public class Provyta implements Serializable {
 	tackntradsupra,vasslen,vasstathet,kriteriestrand,kriterieovan,klippamax,klippalutning,lutningextra;
 	
 	
+	//Sparar kommentarer.
 	String blålapp;
+
+	//Räknare för default.
+	int driftVallsC = 1;
+	
+	//Sweref koordinater markerad start.
+	double startPEast,startPNorth;
+	
+	//Tabeller
+	Table träd,buskar,arter,vallar,habitat,dyner;	
+	//Matris
+	String[][] substrat;
+	
+	//Flagga om ändring gjorts.
+	boolean saved = false;
+	
+	
+
+	public boolean isSaved() {
+		return saved;
+	}
+	
+	public void setSaved(boolean s) {
+		saved = s;
+	}
+	
+	//Toggla lås för ändringar.
+	public void setLocked(boolean isLocked) {
+		this.isLocked = isLocked;
+	}
+
+	public boolean isLocked() {
+		return isLocked;
+	}
+	
+	//This is true if provyta is set as 'inventeras ej'
+	public boolean isNormal() {
+		return isNormal;
+	}
+	
+
 
 	/**
 	 * @return the blålapp
@@ -38,32 +79,15 @@ public class Provyta implements Serializable {
 	 */
 	public void setBlålapp(String blålapp) {
 		this.blålapp = blålapp;
+		saved = false;
 	}
 
-
-
-	//Räknare för default.
-	int driftVallsC = 1;
-
-	
-	Calendar datum;
-	
-	double startPEast,startPNorth;
-	
-	Table träd,buskar,arter,vallar;
-	
-	String[][] substrat;
-
-	
 	/**
 	 * @return the driftVallsC..increase
 	 */
 	public int getDriftVallsC() {
 		return driftVallsC++;
 	}
-
-
-
 	
 	/**
 	 * @return the substrat
@@ -78,11 +102,13 @@ public class Provyta implements Serializable {
 	 */
 	public void setSubstrat(String[][] substrat) {
 		this.substrat = substrat;
+		saved = false;
 	}
 
 
 
 	private boolean isLocked=false;
+	private boolean isNormal=true;
 
 	public String getpyID() {
 		return pyID;
@@ -103,6 +129,7 @@ public class Provyta implements Serializable {
 	 */
 	public void setLutningextra(String lutningextra) {
 		this.lutningextra = lutningextra;
+		saved = false;
 	}
 
 
@@ -116,14 +143,6 @@ public class Provyta implements Serializable {
 
 
 
-	/**
-	 * @param träd the träd to set
-	 */
-	public void setTräd(Table träd) {
-		this.träd = träd;
-	}
-
-
 
 	/**
 	 * @return the buskar
@@ -132,14 +151,6 @@ public class Provyta implements Serializable {
 		return buskar;
 	}
 
-
-
-	/**
-	 * @param buskar the buskar to set
-	 */
-	public void setBuskar(Table buskar) {
-		this.buskar = buskar;
-	}
 
 
 
@@ -153,29 +164,12 @@ public class Provyta implements Serializable {
 
 
 	/**
-	 * @param arter the arter to set
-	 */
-	public void setArter(Table arter) {
-		this.arter = arter;
-	}
-
-	
-
-
-	/**
 	 * @return the vallar
 	 */
 	public Table getVallar() {
 		return vallar;
 	}
 
-
-	/**
-	 * @param vallar the vallar to set
-	 */
-	public void setVallar(Table vallar) {
-		this.vallar = vallar;
-	}
 
 
 	public Provyta(String pyID, String provyta, String ruta, String year,
@@ -193,13 +187,13 @@ public class Provyta implements Serializable {
 			String vasslen, String vasstathet, String kriteriestrand,
 			String kriterieovan, String klippamax, String klippalutning) {
 		super();
+		saved = false;
 		this.pyID = pyID;
 		this.provyta = provyta;
 		this.ruta = ruta;
 		this.year = year;
 		this.lagnummer = lagnummer;
 		this.inventerare = inventerare;
-		this.datum = datum;
 		this.inventeringstyp = inventeringstyp;
 		this.orsak = orsak;
 		this.strandtyp = strandtyp;
@@ -242,271 +236,307 @@ public class Provyta implements Serializable {
 
 	public void setPyID(String pyID) {
 		this.pyID = pyID;
+		saved = false;
 	}
 
 
 
 	public void setProvyta(String provyta) {
 		this.provyta = provyta;
+		saved = false;
 	}
 
 
 
 	public void setRuta(String ruta) {
 		this.ruta = ruta;
+		saved = false;
 	}
 
 
 
 	public void setYear(String year) {
 		this.year = year;
+		saved = false;
 	}
 
 
 
 	public void setLagnummer(String lagnummer) {
 		this.lagnummer = lagnummer;
+		saved = false;
 	}
 
 
 
 	public void setInventerare(String inventerare) {
 		this.inventerare = inventerare;
+		saved = false;
 	}
 
 
-
-	public void setDatum(Calendar datum) {
-		this.datum = datum;
-	}
 
 
 
 	public void setInventeringstyp(String inventeringstyp) {
 		this.inventeringstyp = inventeringstyp;
+		saved = false;
 	}
 
 
 
 	public void setOrsak(String orsak) {
 		this.orsak = orsak;
+		saved = false;
 	}
 
 
 
 	public void setStrandtyp(String strandtyp) {
 		this.strandtyp = strandtyp;
+		saved = false;
 	}
 
 
 
 	public void setKusttyp(String kusttyp) {
 		this.kusttyp = kusttyp;
+		saved = false;
 	}
 
 
 
 	public void setTrädförekomst(String trädförekomst) {
 		this.trädförekomst = trädförekomst;
+		saved = false;
 	}
 
 
 
 	public void setExponering(String exponering) {
 		this.exponering = exponering;
+		saved = false;
 	}
 
 
 
 	public void setGpseast(String gpseast) {
 		this.gpseast = gpseast;
+		saved = false;
 	}
 
 
 
 	public void setGpsnorth(String gpsnorth) {
 		this.gpsnorth = gpsnorth;
+		saved = false;
 	}
 
 
 
 	public void setRiktning(String riktning) {
 		this.riktning = riktning;
+		saved = false;
 	}
 
 
 
 	public void setSlutlengeo(String slutlengeo) {
 		this.slutlengeo = slutlengeo;
+		saved = false;
 	}
 
 
 
 	public void setSlutlenorange(String slutlenorange) {
 		this.slutlenorange = slutlenorange;
+		saved = false;
 	}
+	
 
 
 
 	public void setSlutlenkal(String slutlenkal) {
 		this.slutlenkal = slutlenkal;
+		saved = false;
 	}
 
 
 
 	public void setSlutlensupra(String slutlensupra) {
 		this.slutlensupra = slutlensupra;
+		saved = false;
 	}
 
 
 
 	public void setSlutlenovan(String slutlenovan) {
 		this.slutlenovan = slutlenovan;
+		saved = false;
 	}
 
 
 
 	public void setLutninggeo(String lutninggeo) {
 		this.lutninggeo = lutninggeo;
+		saved = false;
 	}
 
 
 
 	public void setLutningsupra(String lutningsupra) {
 		this.lutningsupra = lutningsupra;
+		saved = false;
 	}
 
 
 
 	public void setVattendjup(String vattendjup) {
 		this.vattendjup = vattendjup;
+		saved = false;
 	}
 
 
 
 	public void setMarktypgeo(String marktypgeo) {
 		this.marktypgeo = marktypgeo;
+		saved = false;
 	}
 
 
 
 	public void setMarktypsupra(String marktypsupra) {
 		this.marktypsupra = marktypsupra;
+		saved = false;
 	}
 
 
 
 	public void setMarktypovan(String marktypovan) {
 		this.marktypovan = marktypovan;
+		saved = false;
 	}
 
 
 
 	public void setRekreation(String rekreation) {
 		this.rekreation = rekreation;
+		saved = false;
 	}
 
 
 
 	public void setRojning(String rojning) {
 		this.rojning = rojning;
+		saved = false;
 	}
 
 
 
 	public void setRojningtid(String rojningtid) {
 		this.rojningtid = rojningtid;
+		saved = false;
 	}
 
 
 
 	public void setBrygga(String brygga) {
 		this.brygga = brygga;
+		saved = false;
 	}
 
 
 
 	public void setStangsel(String stangsel) {
 		this.stangsel = stangsel;
+		saved = false;
 	}
 
 
 
 	public void setTacknfaltgeo(String tacknfaltgeo) {
 		this.tacknfaltgeo = tacknfaltgeo;
+		saved = false;
 	}
 
 
 
 	public void setTacknfaltsupra(String tacknfaltsupra) {
 		this.tacknfaltsupra = tacknfaltsupra;
+		saved = false;
 	}
 
 
 
 	public void setTacknbuskgeo(String tacknbuskgeo) {
 		this.tacknbuskgeo = tacknbuskgeo;
+		saved = false;
 	}
 
 
 
 	public void setTacknbusksupra(String tacknbusksupra) {
 		this.tacknbusksupra = tacknbusksupra;
+		saved = false;
 	}
 
 
 
 	public void setTackntradgeo(String tackntradgeo) {
 		this.tackntradgeo = tackntradgeo;
+		saved = false;
 	}
 
 
 
 	public void setTackntradsupra(String tackntradsupra) {
 		this.tackntradsupra = tackntradsupra;
+		saved = false;
 	}
 
 
 
 	public void setVasslen(String vasslen) {
 		this.vasslen = vasslen;
+		saved = false;
 	}
 
 
 
 	public void setVasstathet(String vasstathet) {
 		this.vasstathet = vasstathet;
+		saved = false;
 	}
 
 
 
 	public void setKriteriestrand(String kriteriestrand) {
 		this.kriteriestrand = kriteriestrand;
+		saved = false;
 	}
 
 
 
 	public void setKriterieovan(String kriterieovan) {
 		this.kriterieovan = kriterieovan;
+		saved = false;
 	}
 
 
 
 	public void setKlippamax(String klippamax) {
 		this.klippamax = klippamax;
+		saved = false;
 	}
 
 
 
 	public void setKlippalutning(String klippalutning) {
 		this.klippalutning = klippalutning;
+		saved = false;
 	}
 
 
-
-	public void setLocked(boolean isLocked) {
-		this.isLocked = isLocked;
-	}
 
 
 
@@ -552,11 +582,7 @@ public class Provyta implements Serializable {
 
 
 
-	public Calendar getDatum() {
-		return datum;
-	}
-
-
+	
 
 	public String getInventeringstyp() {
 		return inventeringstyp;
@@ -780,26 +806,66 @@ public class Provyta implements Serializable {
 
 	public void setStartPEast(double e) {
 		startPEast = e;
+		saved = false;
 	}
 
 	public void setStartPNorth(double n) {
 		startPEast = n;
+		saved = false;
 	}
 
-	public boolean isLocked() {
-		return isLocked;
-	}
 	
 
-
+	//Used if 'inventeras ej'	
+	public Provyta(String _pyID, boolean isNormal) {
+		pyID = _pyID;
+		this.isNormal = isNormal;
+		blålapp = "";
+		saved = false;
+	}
 
 	public Provyta(String _pyID) {
 		pyID = _pyID;
-		datum = Calendar.getInstance();
 		//Create empty tables..
-		träd = new Table(4);
-		arter = new Table(4);
-		buskar = new Table(5);
-		vallar = new Table(12);
+		träd = new Table(4,this);
+		arter = new Table(4,this);
+		buskar = new Table(5,this);
+		vallar = new Table(12,this);
+		habitat = new Table(4,this);
+		dyner = new Table(4,this);
+		
+		blålapp="";
+		saved = false;
+		isNormal = true;
 	}
+
+	/**
+	 * @return the startPEast
+	 */
+	public double getStartPEast() {
+		return startPEast;
+	}
+
+	/**
+	 * @return the startPNorth
+	 */
+	public double getStartPNorth() {
+		return startPNorth;
+	}
+
+	/**
+	 * @return the habitat
+	 */
+	public Table getHabitat() {
+		return habitat;
+	}
+
+	/**
+	 * @return the dyner
+	 */
+	public Table getDyner() {
+		return dyner;
+	}
+
+
 }

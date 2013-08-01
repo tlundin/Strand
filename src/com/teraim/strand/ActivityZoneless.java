@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class ActivityZoneless extends Activity {
+public class ActivityZoneless extends M_Activity {
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -25,9 +25,6 @@ public class ActivityZoneless extends Activity {
 				Intent intent = new Intent(ActivityZoneless.this, ActivityArterFaltskikt.class);
 				int typ=-1;
 				switch(v.getId()) {
-				case R.id.arterB:
-					typ = Strand.ARTER;
-					break;
 				case R.id.tradB:
 					typ = Strand.TRÄD;
 					break;
@@ -41,8 +38,27 @@ public class ActivityZoneless extends Activity {
 			
 		};
 		
+		OnClickListener artl = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ActivityZoneless.this, ActivitySelectArt.class);
+				int typ=-1;
+				switch(v.getId()) {
+				case R.id.tradB:
+					typ = Strand.TRÄD;
+					break;
+				case R.id.buskB:
+					typ = Strand.BUSKAR;
+					break;
+				}
+				intent.putExtra(Strand.KEY_CURRENT_TABLE, typ);
+				startActivity(intent);
+			}
+			
+		};
 		
-		((Button)this.findViewById(R.id.arterB)).setOnClickListener(cl);
+		((Button)this.findViewById(R.id.arterB)).setOnClickListener(artl);
 		((Button)this.findViewById(R.id.tradB)).setOnClickListener(cl);
 		((Button)this.findViewById(R.id.buskB)).setOnClickListener(cl);
 		
@@ -55,6 +71,14 @@ public class ActivityZoneless extends Activity {
 			}});
 		((Button)this.findViewById(R.id.strandVallarB)).setOnClickListener(new OnClickListener() {
 			Intent intent = new Intent(ActivityZoneless.this, ActivityVallar.class);
+
+			@Override
+			public void onClick(View v) {
+				startActivity(intent);
+			}});
+		
+		((Button)this.findViewById(R.id.habitatB)).setOnClickListener(new OnClickListener() {
+			Intent intent = new Intent(ActivityZoneless.this, ActivityHabitat.class);
 
 			@Override
 			public void onClick(View v) {

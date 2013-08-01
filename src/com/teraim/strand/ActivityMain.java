@@ -1,7 +1,6 @@
 package com.teraim.strand;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -16,12 +15,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -30,7 +28,6 @@ import android.widget.TextView;
 import com.teraim.strand.Strand.PersistenceHelper;
 import com.teraim.strand.dataobjekt.StrandInputData;
 import com.teraim.strand.dataobjekt.StrandInputData.Entry;
-import com.teraim.strand.utils.JSONify;
 
 /**
  * 
@@ -40,25 +37,36 @@ import com.teraim.strand.utils.JSONify;
  */
 public class ActivityMain extends Activity {
 
-	private Activity mother;
 	private PersistenceHelper ph;
 	private String selectedRuta=PersistenceHelper.UNDEFINED;
+
+
 	private LinearLayout exprDia;
+	private EditText etLag;
+	private EditText etInv;
+	private Spinner rutSpinner;
+	private Spinner ytSpinner;
+	private Spinner alternativSpinner;
+
+
+	private Provyta py = null;
+	private String pyID = null;
+
 	private ArrayAdapter<String> provyteArrayAdapter;
 	//Arraylist for provytor.
 	private final List<String> provyteArray = new ArrayList<String>();
-	private final static String påbörjad = "Fortsätt inmatning";
-	private final static String ny = "Ny inmatning";
-	private final static String klar = "Avslutad yta";
+	private final static String påbörjad = "Status: Påbörjad";
+	private final static String ny = "Status: Ny";
+	private final static String klar = "Status: Markerad klar";
+
+	private final static String[] altArray = {"Inventera","Markera klar","Inventeras ej"};
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		exprDia = (LinearLayout)this.findViewById(R.id.exprdia);
-
-		//Reference to class
-		mother = this;
 		ph = new PersistenceHelper(this);
 		//Check if I am running for the first time. If so, perform initial init.
 		initIfFirstTime();
@@ -68,6 +76,10 @@ public class ActivityMain extends Activity {
 		assert(is !=null);
 		//This call will parse the input file and create a singleton data object that can be used statically.
 		StrandInputData.parseInputFile(is);
+
+		//Create some spinners
+
+		alternativSpinner = (Spinner)this.findViewById(R.id.alternativSpinner);
 
 		rutSpinner = (Spinner)this.findViewById(R.id.rutaspinner);
 		//There can be many entries with the same ID, but we want only one of each.
@@ -82,6 +94,10 @@ public class ActivityMain extends Activity {
 		//Use standard adapter.
 		ArrayAdapter<String> rutArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, rutArray);
 		rutSpinner.setAdapter(rutArrayAdapter);
+
+		ArrayAdapter<String> altArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, altArray);
+		alternativSpinner.setAdapter(altArrayAdapter);
+
 
 		ytSpinner = (Spinner)this.findViewById(R.id.provytaspinner); 	
 		//Then, create an adaptor and link to the array.
@@ -136,13 +152,13 @@ public class ActivityMain extends Activity {
 		//check if there is a current provvyta being worked on.
 
 		py = Strand.getCurrentProvyta(this);
-		
+
 		if (py!=null) {
 			Log.d("Strand","loaded current provyta with py"+py.getProvyta());
 			etLag.setText(py.getLagnummer());
 			etInv.setText(py.getInventerare());
 			setSpinner(rutSpinner,py.getRuta());
-			
+
 		}
 		else {
 			rutArray.add(0,"-");
@@ -151,20 +167,14 @@ public class ActivityMain extends Activity {
 			provyteArrayAdapter.notifyDataSetChanged();	
 			rutArrayAdapter.notifyDataSetChanged();		 
 		}
-		
-		
+
+
 
 	}
-	private EditText etLag;
-	private EditText etInv;
-	private Spinner rutSpinner;
-	private Spinner ytSpinner;
-	private Provyta py = null;
-	private String pyID = null;
-
 	private void showProvyteStatus(String selectedRuta, String selectedProvyta) {
-		TextView expressionMark = (TextView)this.findViewById(R.id.exprmark);
-		Button exprMessage = (Button)this.findViewById(R.id.textmessage);
+		TextView expressionMark = (TextView)this.findViewById(R.id.expressionMark);
+		TextView exprMessage = (TextView)this.findViewById(R.id.exprMessage);
+		//		Button startB =(Button)this.findViewById(R.id.startB);
 		TextView pyIDt = (TextView)this.findViewById(R.id.pyID);
 
 		//check if user selected other py than currently selected.
@@ -203,7 +213,7 @@ public class ActivityMain extends Activity {
 
 			}
 			else {
-				expressionMark.setTextColor(Color.YELLOW);       				
+				expressionMark.setTextColor(Color.BLUE);       				
 				expressionMark.setText("!");
 				exprMessage.setText(påbörjad);
 			}
@@ -231,54 +241,142 @@ public class ActivityMain extends Activity {
 	}
 
 	//Called when button pressed to start insamling.
-	public void startCollect(View view) {
-		if (py == null) {
-			assert(pyID != null);
-			py = new Provyta(pyID);	 
-			//save globals into the new provyta.
-			py.setLagnummer(etLag.getText().toString());
-			Log.d("Strand","Lagnummer set to "+etLag.getText().toString());
-			py.setRuta((String)rutSpinner.getSelectedItem());
-			py.setProvyta( (String)ytSpinner.getSelectedItem());
-			py.setInventerare( etInv.getText().toString());
-			py.setPyID(pyID);
+	public void startCollect(final View view) {
+		int selected = alternativSpinner.getSelectedItemPosition();
+		switch(selected) {
+		case 0:
+			if (py!=null) {
+				if (py.isLocked()) {
+					DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							switch (which){
+							case DialogInterface.BUTTON_POSITIVE:
+								py.setLocked(false);
+								begin();
+								break;
 
-		}
-		//If the provyta is locked, check first with user if he really wants to change it.
-		if (py.isLocked()) {
-			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					switch (which){
-					case DialogInterface.BUTTON_POSITIVE:
-						begin();
-						break;
+							case DialogInterface.BUTTON_NEGATIVE:
+								break;
+							}
+						}
+					};
 
-					case DialogInterface.BUTTON_NEGATIVE:
-						break;
-					}
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setTitle("Ytan är markerad som klar!")
+					.setMessage("Vill du verkligen ändra värden?").setPositiveButton("Ja", dialogClickListener)
+					.setNegativeButton("Nej", dialogClickListener).show();
+
+				} else if (!py.isNormal()) {
+					py = new Provyta(pyID);	 
+					//save globals into the new provyta.
+					py.setLagnummer(etLag.getText().toString());
+					Log.d("Strand","Lagnummer set to "+etLag.getText().toString());
+					py.setRuta((String)rutSpinner.getSelectedItem());
+					py.setProvyta( (String)ytSpinner.getSelectedItem());
+					py.setInventerare( etInv.getText().toString());
+					begin();				}				
+				else
+					begin();
+
+			} 	else {
+				assert(pyID != null);
+				py = new Provyta(pyID);	 
+				//save globals into the new provyta.
+				py.setLagnummer(etLag.getText().toString());
+				Log.d("Strand","Lagnummer set to "+etLag.getText().toString());
+				py.setRuta((String)rutSpinner.getSelectedItem());
+				py.setProvyta( (String)ytSpinner.getSelectedItem());
+				py.setInventerare( etInv.getText().toString());
+				begin();
+			}
+
+			break;
+
+
+		case 1:
+			//Markera klar.
+			if (py!=null) {
+				if(!py.isLocked()) {
+					py.setLocked(true);
+					begin();
 				}
-			};
+			} else {
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setMessage("Fel. En yta utan inmatningar kan inte markeras klar. Kanske vill du välja 'inventeras ej' istället?")
+				.setCancelable(false)
+				.setPositiveButton("Jag förstår", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {		                
+					}
+				});
+				AlertDialog alert = builder.create();
+				alert.show();
+			}
+			break;
+			//Inventeras ej.
+		case 2:
+			if (py!=null) {
+				if (py.isNormal()) {
+					DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							switch (which){
+							case DialogInterface.BUTTON_POSITIVE:
+								createNewTom();
+								begin();
+								break;
+							case DialogInterface.BUTTON_NEGATIVE:
+								break;
+							}
+						}
+					};
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle("Ytan är markerad som klar!")
-			.setMessage("Vill du verkligen ändra värden?").setPositiveButton("Ja", dialogClickListener)
-			.setNegativeButton("Nej", dialogClickListener).show();
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setTitle("En normal yta har redan påbörjats!")
+					.setMessage("Om du går vidare med 'inventeras ej' så försvinner tidigare inmatningar").setPositiveButton("Jag förstår", dialogClickListener)
+					.setNegativeButton("Avbryt", dialogClickListener).show();	
+				} else
+					begin();
+				
+			} else {
+				createNewTom();
+				begin();
 
-		} else 
-			begin();
-
+			}
+			break;
+		}
+		
 
 	}
-
+	private void createNewTom() {
+		py = new Provyta(pyID,false);
+		Log.d("Strand","createNewTOM, typ "+py.isNormal());
+		py.setLagnummer(etLag.getText().toString());
+		py.setRuta((String)rutSpinner.getSelectedItem());
+		py.setProvyta( (String)ytSpinner.getSelectedItem());
+		py.setInventerare( etInv.getText().toString());
+		
+	}
+	
+	
 	private void begin() {
 
-		Intent intent = new Intent(this, ActivityTakePicture.class);
 		//Save all values for default when starting up next time..
 		ph.put(Strand.KEY_CURRENT_PY,py.getpyID());
 		Log.d("Strand","Saved provyta: "+ (String)ytSpinner.getSelectedItem());
 		//Buffer the py object.
 		Strand.setCurrentProvyta(py);
+		Intent intent;
+		//If only lock, restart current activity. 
+		//Otherwise go to next
+		if (py.isLocked()) {
+			finish();
+			intent = getIntent();			
+		} else if (py.isNormal())
+			intent = new Intent(this, ActivityTakePicture.class);
+		else 
+			intent = new Intent(this, ActivityNoInput.class);
+		
 		startActivity(intent);
 
 	}
@@ -289,7 +387,6 @@ public class ActivityMain extends Activity {
 		int spinnerPosition = myAdap.getPosition(selected);
 		//set the default according to value
 		Log.d("Strand","setspinner called with "+selected+" position of selected is "+spinnerPosition);
-
 		mySpinner.setSelection(spinnerPosition);
 	}
 
@@ -340,19 +437,36 @@ public class ActivityMain extends Activity {
 		folder.mkdirs();
 		folder = new File(Strand.PIC_ROOT_DIR);
 		if(!folder.mkdirs())
-			Log.d("Strand","failed...");
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+			Log.e("Strand","Failed to create pic root folder");
 	}
 
 
 
 
+/*
+				Log.d("Strand","Provyta exists..");
+				if (selected == 0) {
+					DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							switch (which){
+							case DialogInterface.BUTTON_POSITIVE:
+								py=null;
+								startCollect(view);
+								break;
+							case DialogInterface.BUTTON_NEGATIVE:
+								break;
+							}
+						}
+					};
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setTitle("Ytan existerar redan!")
+					.setMessage("Vill du verkligen ta bort alla inmatningar?").setPositiveButton("Ja", dialogClickListener)
+					.setNegativeButton("Nej", dialogClickListener).show();
+
+				} else
+ */
 
 
 }

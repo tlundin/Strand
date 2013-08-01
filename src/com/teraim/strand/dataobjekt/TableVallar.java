@@ -51,14 +51,14 @@ import com.teraim.strand.dataobjekt.InputAlertBuilder.AlertBuildHelper;
 			for (int i=0;i<NO_OF_COLS;i++)
 				entries[i]="";
 			entries[0]=name;
-			addRow(myData.getNextId(),entries);
+			addRow(myData.getNextId(),entries).performClick();
 			
 		}
 
 		
 		//creates a row. Will return the row number of the created row.
 
-		protected void addRow(final String myID, final String[] entries) {
+		protected TableRow addRow(final String myID, final String[] entries) {
 
 
 			final TableRow row = createRow(R.layout.row_vallar_table);
@@ -111,6 +111,7 @@ import com.teraim.strand.dataobjekt.InputAlertBuilder.AlertBuildHelper;
 
 
 			addView(row);
+			return row;
 			
 		}
 
