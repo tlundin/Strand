@@ -31,20 +31,10 @@
          android:layout_width="0dp"
          android:layout_weight="1"
          android:background="@drawable/cell_shape"
-        android:text="X" />
-
-    <TextView
-        android:id="@+id/start"
-        android:layout_height="wrap_content"
-        android:gravity= "center"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-         android:layout_width="0dp"
-         android:layout_weight="1"
-         android:background="@drawable/cell_shape"
         android:text="" />
-    
+
         <TextView
-        android:id="@+id/slut"
+        android:id="@+id/langd"
         android:layout_height="wrap_content"
         android:gravity= "center"
         android:textAppearance="?android:attr/textAppearanceMedium"

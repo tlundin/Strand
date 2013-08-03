@@ -30,7 +30,7 @@ public class TableArter extends TableBase {
 
 	public TableArter(Context c, Table data) {
 		super(c,data);
-		init(R.layout.row_arter_table,columnIds,columnName);
+		redraw(R.layout.row_arter_table,columnIds,columnName);
 
 	}
 

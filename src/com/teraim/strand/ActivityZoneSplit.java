@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -16,7 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -136,8 +136,8 @@ public class ActivityZoneSplit extends M_Activity {
 				myDisplayState = STATE_GEO;
 				goGeo();
 			}});
-		
-		
+
+
 		switch (myDisplayState) {
 		case STATE_GEO:
 			goGeo();
@@ -152,7 +152,7 @@ public class ActivityZoneSplit extends M_Activity {
 			goSupra();
 			break;
 		}
-		
+
 	}
 
 
@@ -167,7 +167,7 @@ public class ActivityZoneSplit extends M_Activity {
 		//Lutning 
 
 		addNormalInput(bg,"Lutning Supra","Mätt lutning i supralittralen (grader)",py.getLutningsupra(),ID_LutningSupra,InputType.TYPE_CLASS_NUMBER);
-	
+
 	}
 
 
@@ -185,7 +185,7 @@ public class ActivityZoneSplit extends M_Activity {
 		addNormalInput(bg,"Lutning Geo","Mätt lutning i geolittralen (grader)",py.getLutninggeo(),ID_LutningGeo,InputType.TYPE_CLASS_NUMBER);
 
 
-		
+
 	}
 
 
@@ -197,22 +197,39 @@ public class ActivityZoneSplit extends M_Activity {
 		//Strandtyp
 		List<String> values;// = new ArrayList<String>(Arrays.asList("1","2","3","4","5"));
 		List<String> entries = new ArrayList<String>(Arrays.asList("Klippa/Häll","Block/Grus","Sand","Strandäng/Våtmark","Konstruerad"));
-		values = entries;
+		values = sequence(entries);
 		addSpinnerInput(bg,"Strandtyp","Klassning 1-5",py.getStrandtyp(),ID_StrandTyp,entries,values);
 
 		//Kusttyp
-		values = new ArrayList<String>(Arrays.asList("fastland","öar","skär","grund"));
-		entries = values;
+		entries = new ArrayList<String>(Arrays.asList("Ingen avverking/röjning","kraftig utglesning av stora träd",
+				"Svag utglesning av stora träd","kraftig utglesning av små träd",
+				"kraftig utglesning av buskar","svag utglesning av buskar"));
+		values = sequence(entries);
 		addSpinnerInput(bg,"Kusttyp","Välj bland nedanstående",py.getKusttyp(),ID_KustTyp,entries,values);
 
+		//Röjning
+		entries = new ArrayList<String>(Arrays.asList("fastland","öar (>2 ha)","skär (<2ha och >0,1ha)","grund (<0,1ha)"));
+		values = sequence(entries);
+		addSpinnerInput(bg,"Kusttyp","Välj bland nedanstående",py.getRojning(),ID_KustTyp,entries,values);
+		
+
 		//Vågexponering
-		addNormalInput(bg,"Vågexponering","Bedöm exponeringklass. Jämför med utdata och ändra om det (uppenbart) ej stämmer",py.getExponering(),ID_VågExponering,InputType.TYPE_CLASS_NUMBER);
+		entries = new ArrayList<String>(Arrays.asList("Ultraskyddat","Extremt skyddat","Mycket skyddat","Skyddat","Moderat exponerat","Exponerat","Mycket exponerat","Extremt exponerat"));
+		values = sequence(entries);
+		addSpinnerInput(bg,"Vågexponering","Bedöm exponeringklass. Jämför med utdata och ändra om det (uppenbart) ej stämmer",py.getExponering(),ID_VågExponering,entries,values);
 
 		//Vattendjup
 		addNormalInput(bg,"Vattendjup","Mätt vattendjup 3 m utanför medelvattenlinjen",py.getExponering(),ID_Vattendjup,InputType.TYPE_CLASS_NUMBER);
 
+		addButton(bg,"Arter",new Intent(this,ActivitySelectArt.class));
 	}
 
+
+
+
+
+
+	
 
 
 
@@ -220,7 +237,7 @@ public class ActivityZoneSplit extends M_Activity {
 		bg.removeAllViews();
 
 		//SlutLängd Extralitoral
-		addNormalInput(bg,"Slutlängd Extra","Avstånd från medelvattenlinjen till där hela transekten slutar",py.getSlutlenovan(),ID_SlutlenOvan,InputType.TYPE_CLASS_NUMBER);
+		addNormalInput(bg,"Längd","Avstånd från medelvattenlinjen till där hela transekten slutar",py.getSlutlenovan(),ID_SlutlenOvan,InputType.TYPE_CLASS_NUMBER);
 
 
 		//Trädförekomst
@@ -229,7 +246,7 @@ public class ActivityZoneSplit extends M_Activity {
 
 		//Lutning
 
-		addNormalInput(bg,"Lutning Supra","Mätt lutning i Extralittoralen (grader)",py.getLutningextra(),ID_LutningExtra,InputType.TYPE_CLASS_NUMBER);
+		addNormalInput(bg,"Lutning","Mätt lutning i Extralittoralen (grader)",py.getLutningextra(),ID_LutningExtra,InputType.TYPE_CLASS_NUMBER);
 
 	}
 
@@ -239,7 +256,7 @@ public class ActivityZoneSplit extends M_Activity {
 	public TextView getTextView(View v) {
 		return (TextView)v.findViewById(R.id.editfieldinput);
 	}
-	
+
 	private View createClickableField(ViewGroup bg,String headerT,String defValue) {
 		return createClickableField(bg,headerT,defValue,R.layout.clickable_field_normal);
 	}
@@ -309,8 +326,9 @@ public class ActivityZoneSplit extends M_Activity {
 			}
 			@Override
 			public void setResult(int id, View inputView,View outputView) {
-				Log.d("Strand","Value for spinner: "+values.get(((Spinner)inputView).getSelectedItemPosition()));
-				setStringValue(id,values.get(((Spinner)inputView).getSelectedItemPosition()),outputView);
+				int selPos = ((Spinner)inputView).getSelectedItemPosition();
+				Log.d("Strand","Value for spinner: "+values.get(selPos));
+				setStringValue(id,entries.get(selPos)+" "+values.get(selPos),outputView);
 			}};
 
 
@@ -408,4 +426,28 @@ public class ActivityZoneSplit extends M_Activity {
 		startActivity(i);
 	}
 
+
+	
+	private void addButton(LinearLayout bg, String text,final Intent intent) {
+		Button b = new Button(this);
+		b.setText(text);
+		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
+		b.setLayoutParams(params);
+		b.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				ActivityZoneSplit.this.startActivity(intent);
+			}});
+		bg.addView(b);
+	}
+
+
+	private List<String> sequence(List<String>in) {
+		List<String> ret = new ArrayList<String> ();
+		int i = 1;
+		for (String x:in)
+			ret.add(Integer.toString(i++));
+		return ret;
+	}
 }

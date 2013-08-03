@@ -4,12 +4,12 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="15dp"
     android:orientation="vertical" >
-    
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Habitat" />
+        android:text="Habitat"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,14 +29,53 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:text="+" />
-
     </LinearLayout>
 
-      <ScrollView
-        	android:id="@+id/contentPane"
+    <FrameLayout
+        android:id="@+id/habitatFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         />
+
+    <LinearLayout 
+         	android:visibility="gone"
+        	android:id = "@+id/contentPane"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-		/>
-  
-            
+            android:orientation="vertical" >
+        
+         <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dynhabitat"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Spinner
+                android:id="@+id/dynS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/dynB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="+" />
+        </LinearLayout>
+    
+      <FrameLayout
+        android:id="@+id/dynFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+        
+    </LinearLayout>
+
 </LinearLayout>

@@ -29,7 +29,7 @@ public class TableTrees extends TableBase {
 
 	public TableTrees(Context c, Table data) {
 		super(c,data);
-		init(R.layout.row_trees_table,columnIds,columnName);
+		redraw(R.layout.row_trees_table,columnIds,columnName);
 	}
 
 

@@ -10,7 +10,7 @@ public class Provyta implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4483220563308165825L;
+	private static final long serialVersionUID = 4483220563308165829L;
 	/**
 	 * 
 	 */
@@ -831,7 +831,7 @@ public class Provyta implements Serializable {
 		arter = new Table(4,this);
 		buskar = new Table(5,this);
 		vallar = new Table(12,this);
-		habitat = new Table(4,this);
+		habitat = new Table(5,this);
 		dyner = new Table(4,this);
 		
 		blålapp="";

@@ -52,7 +52,8 @@ public abstract class TableBase extends TableLayout {
 	
 	protected abstract TableRow addRow(final String myID, final String[] entries);
 	
-	public void init(int headerLayoutId, int[] colIDs, String[] colNames) {
+	public void redraw(int headerLayoutId, int[] colIDs, String[] colNames) {
+		this.removeAllViews();
 		createHeader(headerLayoutId,colIDs,colNames);
 			Set<Entry<String, String[]>> rows =  myData.getTable();
 		if (rows!=null)
@@ -61,7 +62,7 @@ public abstract class TableBase extends TableLayout {
 			}
 	}
 	
-	protected void removeRow(TableRow row) {
+	public void removeRow(TableRow row) {
 		myData.deleteRow((String)row.getTag());
 		removeView(row);		
 	}

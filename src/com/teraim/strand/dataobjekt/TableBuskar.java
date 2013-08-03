@@ -22,7 +22,7 @@ public class TableBuskar extends TableBase {
 
 	public TableBuskar(Context c, Table data) {
 		super(c,data);
-		init(R.layout.row_buske_table,columnIds,columnName);
+		redraw(R.layout.row_buske_table,columnIds,columnName);
 	}
 
 

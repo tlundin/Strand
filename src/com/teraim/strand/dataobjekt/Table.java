@@ -33,7 +33,7 @@ public class Table implements Serializable {
 
 		if (entries.length == noOfCols) {
 			rowlist.put(id, entries);
-			Log.d("Strand","Added row of data to table ");
+			Log.d("Strand","Added row of data to table eith id"+ id);
 			mama.setSaved(false);
 		}
 		else
@@ -86,6 +86,11 @@ public class Table implements Serializable {
 			lastkey = array[length-1];
 		Log.d("Strand", "I believe the last key was "+lastkey);
 		return lastkey;
+	}
+
+
+	public void clear() {
+		rowlist.clear();
 	}
 
 

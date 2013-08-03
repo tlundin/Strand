@@ -60,6 +60,8 @@ public class Strand {
 
 	public static final String KEY_HABITAT_DISPLAY_STATE = "habitat_display_state";
 
+	public static final String KEY_HABITAT_DISPLAY_STATE_DYN = "habitat_display_table_dyn";
+
 	public static final String KEY_PREV_ROW = "prev_row";
 
 	
@@ -81,8 +83,8 @@ public class Strand {
 
 	public static final int RIS = 8;
 
-	//TODO: ÄNDRA
-	protected static final int ORMBUNKAR = 8;
+	protected static final int ORMBUNKAR = 9;
+
 
 
 	
@@ -155,6 +157,10 @@ public class Strand {
 
 	public static void setCurrentArtListaProvider(ArtListaProvider ap) {
 		Strand.ap=ap;
+	}
+
+	public static int getInt(String s) {
+		return s!=null&&s.length()>0?Integer.parseInt(s):0;				
 	}
 
 

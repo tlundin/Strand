@@ -120,7 +120,11 @@ public class ActivityArterFaltskikt extends M_Activity {
 			myProvider = R.raw.strandinventering_arter_ris;
 			Log.d("Strand","Table set to ris.");
 			break;
-
+		case Strand.ORMBUNKAR:
+			myTable = new TableArter(this,py.getArter());
+			myProvider = R.raw.strandinventering_arter_ormbunkar;
+			Log.d("Strand","Table set to ormbunkar.");
+			break;
 		default:
 			Log.e("Strand","current table not set in ActivityArter..");
 			break;

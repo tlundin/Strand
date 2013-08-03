@@ -30,7 +30,7 @@ import com.teraim.strand.dataobjekt.InputAlertBuilder.AlertBuildHelper;
 
 		public TableVallar(Context c, Table data) {
 			super(c,data);
-			init(R.layout.row_vallar_table,textviews,columnName);
+			redraw(R.layout.row_vallar_table,textviews,columnName);
 		}
 
 
