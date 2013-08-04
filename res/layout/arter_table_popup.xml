@@ -22,5 +22,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Extra" />
+
+    <CheckBox
+        android:id="@+id/driftCB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Driftvall" />
     
 </LinearLayout>

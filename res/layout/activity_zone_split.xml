@@ -16,27 +16,21 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.30"
+            android:layout_weight="0.20"
             android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/extraT"
+            
+            
+               <TextView
+                android:id="@+id/hydroT"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="#F8FFFF"
+                android:background="#C6E2FF"
                 android:gravity="center"
-                android:text="Extralitoral" />
-
-            <TextView
-                android:id="@+id/supraT"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="#E5E5E5"
-                android:gravity="center"
-                android:text="Supralitoral" />
-
+                android:text="Hydrolitoral" />
+    
+                         
             <TextView
                 android:id="@+id/geoT"
                 android:layout_width="match_parent"
@@ -45,17 +39,27 @@
                 android:background="#FFDAB9"
                 android:gravity="center"
                 android:text="Geolitoral" />
-
-            <TextView
-                android:id="@+id/hydroT"
+            
+           <TextView
+                android:id="@+id/supraT"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="#C6E2FF"
+                android:background="#E5E5E5"
                 android:gravity="center"
-                android:text="Hydrolitoral" />
+                android:text="Supralitoral" />
+            
+               
+               <TextView
+                android:id="@+id/extraT"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#F8FFFF"
+                android:gravity="center"
+                android:text="Extralitoral" />
 
-
+  
             <TextView
                 android:id="@+id/tradT"
                 android:layout_width="match_parent"
@@ -73,6 +77,7 @@
                 android:background="#BCED91"
                 android:gravity="center"
                 android:text="Buskar" />
+
             <TextView
                 android:id="@+id/driftT"
                 android:layout_width="match_parent"
@@ -80,7 +85,17 @@
                 android:layout_weight="1"
                 android:background="#FFE7BA"
                 android:gravity="center"
-                android:text="Drift/Deponi" />
+                android:text="Drift" />
+
+            <TextView
+                android:id="@+id/deponiT"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#FFE7BA"
+                android:gravity="center"
+                android:text="Deponi" />
+
             <TextView
                 android:id="@+id/habitatT"
                 android:layout_width="match_parent"
@@ -88,8 +103,8 @@
                 android:layout_weight="1"
                 android:background="#FFFF7E"
                 android:gravity="center"
-                android:text="Habitat" />           
-                
+                android:text="Habitat" />
+
             <TextView
                 android:id="@+id/ovrigtT"
                 android:layout_width="match_parent"
@@ -97,15 +112,14 @@
                 android:layout_weight="1"
                 android:background="#C6C3B5"
                 android:gravity="center"
-                android:text="Övrigt" />           
-            
-            
-</LinearLayout>
+                android:text="Övrigt" />
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/contentPane"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.70"
+            android:layout_weight="0.80"
             android:background="#F0FFFF"
             android:orientation="vertical" >
 

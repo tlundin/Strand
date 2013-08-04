@@ -53,4 +53,13 @@
          android:background="@drawable/cell_shape"
         android:text="" />
 
+                <TextView
+        android:id="@+id/kriterie"
+        android:layout_height="wrap_content"
+        android:gravity= "center"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+         android:layout_width="0dp"
+         android:layout_weight="1"
+         android:background="@drawable/cell_shape"
+        android:text="" />
 </TableRow>

@@ -1,6 +1,11 @@
 package com.teraim.strand;
 
+import java.util.HashMap;
+
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
@@ -17,6 +22,10 @@ public class ActivityVallar extends M_Activity {
 	private ImageButton pic_drift1;
 	private ImageButton pic_drift2;
 	private ImageHandler imgHandler;
+	
+	//Map name to button
+	HashMap<String, ImageButton> buttonM = new HashMap<String,ImageButton>();
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +47,8 @@ public class ActivityVallar extends M_Activity {
 		
 		imgHandler = new ImageHandler(this);
 		
+		buttonM.clear();
+		
 		pic_drift1 = (ImageButton)this.findViewById(R.id.pic_drift1);
 		pic_drift2 = (ImageButton)this.findViewById(R.id.pic_drift2);
 
@@ -48,9 +59,34 @@ public class ActivityVallar extends M_Activity {
 	}
 	
 	private void initPic(final ImageButton b, final String name) {
+		buttonM.put(name, b);
 		imgHandler.drawButton(b,name);
 		imgHandler.addListener(b,name);
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent myI){
+
+		if (requestCode == ImageHandler.TAKE_PICTURE){
+			if (resultCode == Activity.RESULT_OK) 
+			{
+				Log.d("Strand","picture was taken, result ok");
+				//				String name = myI.getStringExtra(Strand.KEY_PIC_NAME);
+				String currSaving = imgHandler.getCurrentlySaving();
+				if (currSaving!=null) {
+					ImageButton b = buttonM.get(currSaving);
+					imgHandler.drawButton(b,currSaving);
+					Log.d("Strand","Drew button!");
+				} else
+					Log.e("Strand","Did not find pic with name "+currSaving+" in onActRes in TakePic Activity");
+			} else {
+				Log.d("Strand","picture was NOT taken, result NOT ok");
+			}
+
+		}
+		
+	}
+	
 	public void onAddRowButtonClicked(View v) {
 		//Add a row with default driftvallsnummer..
 		tv.addRow(Integer.toString(py.getDriftVallsC()));

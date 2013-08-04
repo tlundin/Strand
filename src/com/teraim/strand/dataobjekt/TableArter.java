@@ -18,14 +18,14 @@ import com.teraim.strand.dataobjekt.InputAlertBuilder.AlertBuildHelper;
 
 public class TableArter extends TableBase {
 
-	protected final static int[] columnIds = new int[] {R.id.namn, R.id.supra, R.id.geo,R.id.extra};
-	int[] inputviews = new int[] {R.id.supra,R.id.geo,R.id.extra};
-	int[] editviews = new int[] {R.id.supraE,R.id.geoE,R.id.extraE};
-	int[] chkboxes = new int[] {R.id.supraCB,R.id.geoCB,R.id.extraCB};
-	protected final static String[] columnName = new String[] {"NAMN","SUPRA","GEO","EXTRA"};
+	protected final static int[] columnIds = new int[] {R.id.namn, R.id.supra, R.id.geo,R.id.extra,R.id.drift};
+	int[] inputviews = new int[] {R.id.supra,R.id.geo,R.id.extra,R.id.drift};
+	int[] editviews = new int[] {R.id.supraE,R.id.geoE,R.id.extraE,R.id.driftE};
+	int[] chkboxes = new int[] {R.id.supraCB,R.id.geoCB,R.id.extraCB,R.id.driftCB};
+	protected final static String[] columnName = new String[] {"NAMN","SUPRA","GEO","XTRA","DRIFT"};
 	//private CheckBox supraCB,geoCB,extraCB;
 	//private EditText supraE,geoE,extraE;
-	private TextView artT,supraT,geoT,extraT;
+//	private TextView artT,supraT,geoT,extraT,driftT;
 
 
 	public TableArter(Context c, Table data) {
@@ -42,9 +42,10 @@ public class TableArter extends TableBase {
 		entries[1]="";
 		entries[2]="";
 		entries[3]="";
+		entries[4]="";
 		String myID = myData.getNextId();
 		addRow(myID,entries).performClick();
-		myData.saveRow(myID, name,"","","");
+		myData.saveRow(myID, name,"","","","");
 		
 
 	}
@@ -61,20 +62,9 @@ public class TableArter extends TableBase {
 		final TableRow row = super.createRow(R.layout.row_arter_table);
 		assert(row!=null);
 
-		artT = (TextView)row.findViewById(R.id.namn);
-		supraT = (TextView)row.findViewById(R.id.supra);
-		geoT = (TextView)row.findViewById(R.id.geo);
-		extraT = (TextView)row.findViewById(R.id.extra);
-
-		assert(entries.length==4);
-		//Load
-		artT.setText(entries[0]);
-		supraT.setText(entries[1]);
-		geoT.setText(entries[2]);
-		extraT.setText(entries[3]);
-
-		Log.d("Strand", "Skapar nu Alert för Tabell arter");
-
+		int i=0;
+		for(int id:inputviews) 
+			((TextView)row.findViewById(id)).setText(entries[i++]);
 
 		row.setTag(myID);	
 

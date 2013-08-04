@@ -10,39 +10,214 @@ public class Provyta implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4483220563308165829L;
+	private static final long serialVersionUID = 4483220563308165832L;
 	/**
 	 * 
 	 */
 	
-	String pyID, provyta,ruta,year,lagnummer,inventerare,inventeringstyp,orsak,strandtyp,kusttyp,trädförekomst,exponering,gpseast,gpsnorth,
-	riktning,slutlengeo,slutlenorange,slutlenkal,slutlensupra,slutlenovan,lutninggeo,lutningsupra,vattendjup,marktypgeo,marktypsupra,
-	marktypovan,rekreation,rojning,rojningtid,brygga,stangsel,tacknfaltgeo,tacknfaltsupra,tacknbuskgeo,tacknbusksupra,tackntradgeo,
-	tackntradsupra,vasslen,vasstathet,kriteriestrand,kriterieovan,klippamax,klippalutning,lutningextra;
+	String brygga,dynerblottadsand,exponering,gpseast,gpsnorth,inventerare,inventeringstyp,orsak,kriteriestrand,kriterieovan,klippamax,
+	kusttyp,lagnummer,lutningextra,lutninggeo,lutningsupra,marktypextra,marktypgeo,marktypsupra,
+	marktypovan,ovanhabitat,provyta,pyID,rekreation,rojning,rojningtid,ruta,riktning,
+	slutlengeo,slutlensupra,slutlenovan,strandtyp,vattendjuppyID, stangsel,tradforekomst,tradtackninggeo,
+	tradtackningsupra,tradtackningextra,vegtackningfaltgeo,vegtackningfaltsupra,
+	vegtackningfaltextra,vasslen,vattendjup,vasstathet,year;
 	
-	
+	/**
+	 * @return the dynerblottadsand
+	 */
+	public String getDynerblottadsand() {
+		return dynerblottadsand;
+	}
+
+	/**
+	 * @param dynerblottadsand the dynerblottadsand to set
+	 */
+	public void setDynerblottadsand(String dynerblottadsand) {
+		saved = false;
+		this.dynerblottadsand = dynerblottadsand;
+	}
+
+	/**
+	 * @return the tradforekomst
+	 */
+	public String getTradforekomst() {
+		return tradforekomst;
+	}
+
+	/**
+	 * @param tradforekomst the tradforekomst to set
+	 */
+	public void setTradforekomst(String tradforekomst) {
+		saved = false;
+		this.tradforekomst = tradforekomst;
+	}
+
+	/**
+	 * @return the tradtackningextra
+	 */
+	public String getTradtackningextra() {
+		return tradtackningextra;
+	}
+
+	/**
+	 * @param tradtackningextra the tradtackningextra to set
+	 */
+	public void setTradtackningextra(String tradtackningextra) {
+		saved = false;
+		this.tradtackningextra = tradtackningextra;
+	}
+
+	/**
+	 * @return the vegtackningfaltextra
+	 */
+	public String getVegtackningfaltextra() {
+		return vegtackningfaltextra;
+	}
+
+	/**
+	 * @param vegtackningfaltextra the vegtackningfaltextra to set
+	 */
+	public void setVegtackningfaltextra(String vegtackningfaltextra) {
+		saved = false;
+		this.vegtackningfaltextra = vegtackningfaltextra;
+	}
+
+	/**
+	 * @return the marktypextra
+	 */
+	public String getMarktypextra() {
+		return marktypextra;
+	}
+
+	/**
+	 * @param marktypextra the marktypextra to set
+	 */
+	public void setMarktypextra(String marktypextra) {
+		saved = false;
+		this.marktypextra = marktypextra;
+	}
+
+	/**
+	 * @return the tradtackninggeo
+	 */
+	public String getTradtackninggeo() {
+		return tradtackninggeo;
+	}
+
+	/**
+	 * @param tradtackninggeo the tradtackninggeo to set
+	 */
+	public void setTradtackninggeo(String tradtackninggeo) {
+		saved = false;
+		this.tradtackninggeo = tradtackninggeo;
+	}
+
+	/**
+	 * @return the vegtackningfaltgeo
+	 */
+	public String getVegtackningfaltgeo() {
+		return vegtackningfaltgeo;
+	}
+
+	/**
+	 * @param vegtackningfaltgeo the vegtackningfaltgeo to set
+	 */
+	public void setVegtackningfaltgeo(String vegtackningfaltgeo) {
+		saved = false;
+		this.vegtackningfaltgeo = vegtackningfaltgeo;
+	}
+
+	/**
+	 * @return the tradtackningsupra
+	 */
+	public String getTradtackningsupra() {
+		return tradtackningsupra;
+	}
+
+	/**
+	 * @param tradtackningsupra the tradtackningsupra to set
+	 */
+	public void setTradtackningsupra(String tradtackningsupra) {
+		saved = false;
+		this.tradtackningsupra = tradtackningsupra;
+	}
+
+	private boolean isLocked=false;
+	private boolean isNormal=true;
+
+
 	//Sparar kommentarer.
 	String blålapp;
 
+	/**
+	 * @return the blålapp
+	 */
+	public String getBlålapp() {
+		return blålapp;
+	}
+
+	/**
+	 * @param blålapp the blålapp to set
+	 */
+	public void setBlålapp(String blålapp) {
+		saved = false;
+		this.blålapp = blålapp;
+	}
+
 	//Räknare för default.
 	int driftVallsC = 1;
-	
+
+	public int getDriftVallsC() {
+		return driftVallsC++;
+	}
+
 	//Sweref koordinater markerad start.
 	double startPEast,startPNorth;
 	
 	//Tabeller
 	Table träd,buskar,arter,vallar,habitat,dyner;	
+	/**
+	 * @return the ovanHabitat
+	 */
+	public String getOvanHabitat() {
+		return ovanhabitat;
+	}
+
+	/**
+	 * @param ovanHabitat the ovanHabitat to set
+	 */
+	public void setOvanHabitat(String ovanHabitat) {
+		this.ovanhabitat = ovanhabitat;
+	}
+
 	//Matris
 	String[][] substrat;
 	
+	/**
+	 * @return the substrat
+	 */
+	public String[][] getSubstrat() {
+		return substrat;
+	}
+
 	//Flagga om ändring gjorts.
 	boolean saved = false;
 	
 	
-
+	public boolean isLocked() {
+		return isLocked;
+	}
+	
 	public boolean isSaved() {
 		return saved;
 	}
+	
+	//This is true if provyta is set as 'inventeras ej'
+		public boolean isNormal() {
+			return isNormal;
+	}
+		
+	
 	
 	public void setSaved(boolean s) {
 		saved = s;
@@ -53,63 +228,10 @@ public class Provyta implements Serializable {
 		this.isLocked = isLocked;
 	}
 
-	public boolean isLocked() {
-		return isLocked;
-	}
-	
-	//This is true if provyta is set as 'inventeras ej'
-	public boolean isNormal() {
-		return isNormal;
-	}
 	
 
 
-	/**
-	 * @return the blålapp
-	 */
-	public String getBlålapp() {
-		return blålapp;
-	}
-
-
-
-
-	/**
-	 * @param blålapp the blålapp to set
-	 */
-	public void setBlålapp(String blålapp) {
-		this.blålapp = blålapp;
-		saved = false;
-	}
-
-	/**
-	 * @return the driftVallsC..increase
-	 */
-	public int getDriftVallsC() {
-		return driftVallsC++;
-	}
 	
-	/**
-	 * @return the substrat
-	 */
-	public String[][] getSubstrat() {
-		return substrat;
-	}
-
-
-	/**
-	 * @param substrat the substrat to set
-	 */
-	public void setSubstrat(String[][] substrat) {
-		this.substrat = substrat;
-		saved = false;
-	}
-
-
-
-	private boolean isLocked=false;
-	private boolean isNormal=true;
-
 	public String getpyID() {
 		return pyID;
 	}
@@ -133,6 +255,18 @@ public class Provyta implements Serializable {
 	}
 
 
+
+	public void setStartPEast(double e) {
+		startPEast = e;
+		saved = false;
+	}
+
+	public void setStartPNorth(double n) {
+		startPEast = n;
+		saved = false;
+	}
+
+	
 	
 	/**
 	 * @return the träd
@@ -172,66 +306,6 @@ public class Provyta implements Serializable {
 
 
 
-	public Provyta(String pyID, String provyta, String ruta, String year,
-			String lagnummer, String inventerare, Calendar datum,
-			String inventeringstyp, String orsak, String strandtyp,
-			String kusttyp, String trädförekomst, String exponering,
-			String gpseast, String gpsnorth, String riktning,
-			String slutlengeo, String slutlenorange, String slutlenkal,
-			String slutlensupra, String slutlenovan, String lutninggeo,
-			String lutningsupra, String vattendjup, String marktypgeo,
-			String marktypsupra, String marktypovan, String rekreation,
-			String rojning, String rojningtid, String brygga, String stangsel,
-			String tacknfaltgeo, String tacknfaltsupra, String tacknbuskgeo,
-			String tacknbusksupra, String tackntradgeo, String tackntradsupra,
-			String vasslen, String vasstathet, String kriteriestrand,
-			String kriterieovan, String klippamax, String klippalutning) {
-		super();
-		saved = false;
-		this.pyID = pyID;
-		this.provyta = provyta;
-		this.ruta = ruta;
-		this.year = year;
-		this.lagnummer = lagnummer;
-		this.inventerare = inventerare;
-		this.inventeringstyp = inventeringstyp;
-		this.orsak = orsak;
-		this.strandtyp = strandtyp;
-		this.kusttyp = kusttyp;
-		this.trädförekomst = trädförekomst;
-		this.exponering = exponering;
-		this.gpseast = gpseast;
-		this.gpsnorth = gpsnorth;
-		this.riktning = riktning;
-		this.slutlengeo = slutlengeo;
-		this.slutlenorange = slutlenorange;
-		this.slutlenkal = slutlenkal;
-		this.slutlensupra = slutlensupra;
-		this.slutlenovan = slutlenovan;
-		this.lutninggeo = lutninggeo;
-		this.lutningsupra = lutningsupra;
-		this.vattendjup = vattendjup;
-		this.marktypgeo = marktypgeo;
-		this.marktypsupra = marktypsupra;
-		this.marktypovan = marktypovan;
-		this.rekreation = rekreation;
-		this.rojning = rojning;
-		this.rojningtid = rojningtid;
-		this.brygga = brygga;
-		this.stangsel = stangsel;
-		this.tacknfaltgeo = tacknfaltgeo;
-		this.tacknfaltsupra = tacknfaltsupra;
-		this.tacknbuskgeo = tacknbuskgeo;
-		this.tacknbusksupra = tacknbusksupra;
-		this.tackntradgeo = tackntradgeo;
-		this.tackntradsupra = tackntradsupra;
-		this.vasslen = vasslen;
-		this.vasstathet = vasstathet;
-		this.kriteriestrand = kriteriestrand;
-		this.kriterieovan = kriterieovan;
-		this.klippamax = klippamax;
-		this.klippalutning = klippalutning;
-	}
 
 
 	public void setPyID(String pyID) {
@@ -240,6 +314,15 @@ public class Provyta implements Serializable {
 	}
 
 
+	public void setVegtackningfaltsupra(String vegtackningfaltsupra) {
+		this.vegtackningfaltsupra = vegtackningfaltsupra;
+		saved = false;
+	}
+
+	public void setSubstrat(String[][] substrat) {
+		this.substrat = substrat;
+		saved = false;
+	}
 
 	public void setProvyta(String provyta) {
 		this.provyta = provyta;
@@ -306,13 +389,7 @@ public class Provyta implements Serializable {
 
 
 
-	public void setTrädförekomst(String trädförekomst) {
-		this.trädförekomst = trädförekomst;
-		saved = false;
-	}
-
-
-
+	
 	public void setExponering(String exponering) {
 		this.exponering = exponering;
 		saved = false;
@@ -347,19 +424,6 @@ public class Provyta implements Serializable {
 	}
 
 
-
-	public void setSlutlenorange(String slutlenorange) {
-		this.slutlenorange = slutlenorange;
-		saved = false;
-	}
-	
-
-
-
-	public void setSlutlenkal(String slutlenkal) {
-		this.slutlenkal = slutlenkal;
-		saved = false;
-	}
 
 
 
@@ -454,45 +518,7 @@ public class Provyta implements Serializable {
 
 
 
-	public void setTacknfaltgeo(String tacknfaltgeo) {
-		this.tacknfaltgeo = tacknfaltgeo;
-		saved = false;
-	}
 
-
-
-	public void setTacknfaltsupra(String tacknfaltsupra) {
-		this.tacknfaltsupra = tacknfaltsupra;
-		saved = false;
-	}
-
-
-
-	public void setTacknbuskgeo(String tacknbuskgeo) {
-		this.tacknbuskgeo = tacknbuskgeo;
-		saved = false;
-	}
-
-
-
-	public void setTacknbusksupra(String tacknbusksupra) {
-		this.tacknbusksupra = tacknbusksupra;
-		saved = false;
-	}
-
-
-
-	public void setTackntradgeo(String tackntradgeo) {
-		this.tackntradgeo = tackntradgeo;
-		saved = false;
-	}
-
-
-
-	public void setTackntradsupra(String tackntradsupra) {
-		this.tackntradsupra = tackntradsupra;
-		saved = false;
-	}
 
 
 
@@ -528,16 +554,6 @@ public class Provyta implements Serializable {
 		this.klippamax = klippamax;
 		saved = false;
 	}
-
-
-
-	public void setKlippalutning(String klippalutning) {
-		this.klippalutning = klippalutning;
-		saved = false;
-	}
-
-
-
 
 
 	public static long getSerialversionuid() {
@@ -608,11 +624,6 @@ public class Provyta implements Serializable {
 
 
 
-	public String getTrädförekomst() {
-		return trädförekomst;
-	}
-
-
 
 	public String getExponering() {
 		return exponering;
@@ -642,17 +653,6 @@ public class Provyta implements Serializable {
 		return slutlengeo;
 	}
 
-
-
-	public String getSlutlenorange() {
-		return slutlenorange;
-	}
-
-
-
-	public String getSlutlenkal() {
-		return slutlenkal;
-	}
 
 
 
@@ -734,42 +734,6 @@ public class Provyta implements Serializable {
 
 
 
-	public String getTacknfaltgeo() {
-		return tacknfaltgeo;
-	}
-
-
-
-	public String getTacknfaltsupra() {
-		return tacknfaltsupra;
-	}
-
-
-
-	public String getTacknbuskgeo() {
-		return tacknbuskgeo;
-	}
-
-
-
-	public String getTacknbusksupra() {
-		return tacknbusksupra;
-	}
-
-
-
-	public String getTackntradgeo() {
-		return tackntradgeo;
-	}
-
-
-
-	public String getTackntradsupra() {
-		return tackntradsupra;
-	}
-
-
-
 	public String getVasslen() {
 		return vasslen;
 	}
@@ -800,22 +764,6 @@ public class Provyta implements Serializable {
 
 
 
-	public String getKlippalutning() {
-		return klippalutning;
-	}
-
-	public void setStartPEast(double e) {
-		startPEast = e;
-		saved = false;
-	}
-
-	public void setStartPNorth(double n) {
-		startPEast = n;
-		saved = false;
-	}
-
-	
-
 	//Used if 'inventeras ej'	
 	public Provyta(String _pyID, boolean isNormal) {
 		pyID = _pyID;
@@ -831,8 +779,8 @@ public class Provyta implements Serializable {
 		arter = new Table(4,this);
 		buskar = new Table(5,this);
 		vallar = new Table(12,this);
-		habitat = new Table(5,this);
-		dyner = new Table(4,this);
+		habitat = new Table(6,this);
+		dyner = new Table(5,this);
 		
 		blålapp="";
 		saved = false;
@@ -865,6 +813,10 @@ public class Provyta implements Serializable {
 	 */
 	public Table getDyner() {
 		return dyner;
+	}
+
+	public String getVegtackningfaltsupra() {
+		return vegtackningfaltsupra;
 	}
 
 

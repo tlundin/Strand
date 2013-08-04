@@ -1,42 +1,55 @@
 package com.teraim.strand.dataobjekt;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import com.teraim.strand.ActivityHabitat;
-import com.teraim.strand.R;
-import com.teraim.strand.dataobjekt.InputAlertBuilder.AlertBuildHelper;
 
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnLongClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.teraim.strand.ActivityHabitat;
+import com.teraim.strand.R;
+import com.teraim.strand.Strand;
+import com.teraim.strand.dataobjekt.InputAlertBuilder.AlertBuildHelper;
 
 public class TableHabitat extends TableBase {
 
 
 	int[] textviews = {R.id.kod,R.id.namn, R.id.utbredning, R.id.start,R.id.slut};
 	int[] editviews = {R.id.e1,R.id.e2,R.id.e3,R.id.e4,R.id.e5};
-	protected final static int[] columnIds = new int[] {R.id.kod,R.id.namn, R.id.utbredning, R.id.start,R.id.slut};
-	protected final static String[] columnName = new String[] {"Kod","Namn","Utbredning","Start (m)","Slut (m)"};
+	
+	protected final static int[] columnIds = new int[] {R.id.kod,R.id.namn, R.id.utbredning, R.id.start,R.id.slut,R.id.kriterie};
+	protected final static String[] columnName = new String[] {"Kod","Namn","M.K.","Start (m)","Slut (m)","Kriterie"};
 
+	
+	public final static String[] noEntries = {"Bebyggd strand","Påverkad av gräv/pirbygge/muddring",
+			"Avverkning kraftig utglesning av träd","Hydrologi påverkad (ex. reglering)",
+			"Området exploaterat eller bebyggt","Ej naturlig skog"};
+	List<String> values = new ArrayList<String>(Arrays.asList("13","14","15","16","17","18"));
+
+	
 	//	private boolean hasListener = true;
 
-	private boolean dynHabitatExists = false;
 	private TableRow dynHabitatRow =null;
 	private String dynHabitatId;
+	private Spinner sp_9999 ;
+	private ArrayAdapter<String> altArrayAdapter;
 
 	public TableHabitat(Context c, Table data) {
 		super(c,data);
 		redraw(R.layout.row_habitat_table,columnIds,columnName);
-
+		
+		altArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, noEntries);
 	}
 
 
@@ -49,25 +62,31 @@ public class TableHabitat extends TableBase {
 
 	//Has listener field indicates in reality DynHabitat.
 	public TableRow addRow(String kod, String name, String utbredning, String start) {
-		String[] entries = new String[5];
+		String[] entries = new String[6];
 		entries[0]=kod;
 		//The special case..
 		entries[1]=name;
 		entries[2]=utbredning;
 		entries[3]=start;
-		entries[4]="";	
+		entries[4]="";
+		//Kriterie...
+		entries[5]="";
 		String myID = myData.getNextId();
 		TableRow row = addRow(myID,entries);		
 		row.performClick();		
-		myData.saveRow(myID, kod,name,utbredning,start,"");
+		myData.saveRow(myID, kod,name,utbredning,start,"","");
 		return row;
 	}
 
 
+	
+	
 	@Override
-	protected TableRow addRow(final String myID, String[] entries) {
+	protected TableRow addRow(final String myID, final String[] entries) {
 
 		//checkfirst if this is special case.
+		
+		
 
 		if (entries[0].equals(ActivityHabitat.KOD_DYNHABITAT))
 			return addDynHabitatRow(myID,entries);
@@ -77,7 +96,7 @@ public class TableHabitat extends TableBase {
 			//Load
 			int i=0;
 
-			for(int id:textviews) 
+			for(int id:columnIds) 
 				((TextView)row.findViewById(id)).setText(entries[i++]);
 
 			row.setTag(myID);	
@@ -88,11 +107,19 @@ public class TableHabitat extends TableBase {
 
 						@Override
 						public View createView() {
-							View inputView = LayoutInflater.from(c).inflate(R.layout.habitat_table_popup,null);
+							boolean kriteria = entries[0].equals(ActivityHabitat.KOD_9999);
+							int rowLayoutId = (kriteria)?R.layout.habitat_table_popup_9999:R.layout.habitat_table_popup;
+							LinearLayout inputView = (LinearLayout)LayoutInflater.from(c).inflate(rowLayoutId,null);
 							int i = 0;
 							for(int id:textviews) 
 								((EditText)inputView.findViewById(editviews[i++])).setText(((TextView)row.findViewById(id)).getText());
-
+							
+							if(kriteria) {
+								sp_9999 = (Spinner)inputView.findViewById(R.id.e6);
+								sp_9999.setAdapter(altArrayAdapter);								
+								sp_9999.setSelection(Strand.getInt(entries[5]), true);
+								Log.d("Strand","no 5 was "+Strand.getInt(entries[5]));
+							}
 							return inputView;
 						}
 
@@ -104,7 +131,12 @@ public class TableHabitat extends TableBase {
 							for(int id:editviews)
 								ets.add(((EditText)inputView.findViewById(id)).getText().toString());
 							int i = 0;
-							for(int id:textviews)  {
+							//Add spinner if any.
+							if (entries[0].equals(ActivityHabitat.KOD_9999)) 
+								ets.add((String)sp_9999.getSelectedItem());
+							else
+								ets.add("");
+							for(int id:columnIds)  {
 								((TextView)row.findViewById(id)).setText(ets.get(i));
 								Log.d("Strand","Sätter värde "+ets.get(i));
 								i++;
@@ -222,7 +254,7 @@ public class TableHabitat extends TableBase {
 		//refuse to add if already exist
 		final TableRow row = createRow(R.layout.row_habitat_table);
 		int i=0;
-		for(int id:textviews) 
+		for(int id:columnIds) 
 			((TextView)row.findViewById(id)).setText(entries[i++]);
 		row.setTag(myID);	
 

@@ -76,6 +76,25 @@
         android:inputType="number" >
         <requestFocus />
     </EditText>
+    
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Varför 9999?"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/e5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:ems="10"
+        >
+        <requestFocus />
+        
+    </Spinner>   
    
 
 </LinearLayout>
