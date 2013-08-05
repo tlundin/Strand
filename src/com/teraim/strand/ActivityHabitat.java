@@ -98,7 +98,11 @@ public class ActivityHabitat extends M_Activity {
 
 		Button habitatB = (Button)this.findViewById(R.id.habitatB);
 		Button dynB = (Button)this.findViewById(R.id.dynB);
+		
+
+		
 		final LinearLayout sv = (LinearLayout)this.findViewById(R.id.contentPane);
+		final EditText sandblotta = (EditText)sv.findViewById(R.id.sandblottadyn);
 		final FrameLayout dynFrame = (FrameLayout)this.findViewById(R.id.dynFrame);
 		final FrameLayout habitatFrame = (FrameLayout)this.findViewById(R.id.habitatFrame);
 
@@ -152,7 +156,7 @@ public class ActivityHabitat extends M_Activity {
 						String[] e = new String[6];
 						e[0]=kod;e[1]=namn;e[2]=hUtbredning[sel];e[3]=start;e[4]=start;e[5]="";
 						//add row.
-						final TableRow row = tableH.addDynHabitatRow(e);
+						tableH.addDynHabitatRow(e);
 						//add special listener
 						addDynListener(sv,dynFrame);
 						//Display spinner
@@ -189,15 +193,14 @@ public class ActivityHabitat extends M_Activity {
 
 			}});		
 
+		spinnerO.post(new Runnable() {
+			public void run() {
 		spinnerO.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-			String start = "";
-
-			@Override
+				@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
 				int sel = spinnerO.getSelectedItemPosition();
-				String namn = habitat[sel];
 				String kod = hKoder[sel];
 				py.setOvanHabitat(kod);
 
@@ -211,32 +214,40 @@ public class ActivityHabitat extends M_Activity {
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
 			}});
-
-
-
-		noHabS.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
-				py.setKriterieovan((String)noHabS.getSelectedItem());
 			}
+		});
 
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-			}});
+		noHabS.post(new Runnable() {
+			public void run() {
+				noHabS.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-		markanvOvanS.setOnItemSelectedListener(new OnItemSelectedListener() {
+					@Override
+					public void onItemSelected(AdapterView<?> arg0, View arg1,
+							int arg2, long arg3) {
+						py.setKriterieovan((String)noHabS.getSelectedItem());
+				}
 
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
-				py.setMarktypovan((String)markanvOvanS.getSelectedItem());
-			}
+					@Override
+					public void onNothingSelected(AdapterView<?> arg0) {
+					}});			
+				}
+			});
 
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-			}});
+		markanvOvanS.post(new Runnable() {
+			public void run() {
+				markanvOvanS.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+					@Override
+					public void onItemSelected(AdapterView<?> arg0, View arg1,
+							int arg2, long arg3) {
+						py.setMarktypovan((String)markanvOvanS.getSelectedItem());
+					}
+
+					@Override
+					public void onNothingSelected(AdapterView<?> arg0) {
+					}});			}
+			});
+
 		
 
 
@@ -265,7 +276,6 @@ public class ActivityHabitat extends M_Activity {
 			dynFrame.addView(tableD);
 
 
-			EditText sandblotta = (EditText)sv.findViewById(R.id.sandblottadyn);
 
 
 			sandblotta.addTextChangedListener(new TextWatcher() {
@@ -293,7 +303,37 @@ public class ActivityHabitat extends M_Activity {
 		}
 
 		if (state == STATE_INITIAL) {
-			spinnerO.setSelection(1);
+			if(py.getDynerblottadsand()!=null) {
+				sandblotta.setText(py.getDynerblottadsand());
+			}
+				
+			String oh = py.getOvanHabitat();
+			if (oh!=null) {
+				Log.d("Strand","getOvanHabitat: "+py.getOvanHabitat());
+				for(int i=0;i<hKoder.length;i++)
+					if(oh.equals(hKoder[i])) {
+						spinnerO.setSelection(i);
+						break;
+					}
+						
+			} else {
+				Log.d("Strand","found no value for getOvanHabitat");
+				spinnerO.setSelection(1);
+			}
+			String mt = py.getMarktypovan();
+			if (mt!=null) {
+				Log.d("Strand","marktypovan: "+py.getMarktypovan());
+				for(int i=0;i<ActivityZoneSplit.markTyper.size();i++)
+					if(mt.equals(ActivityZoneSplit.markTyper.get(i))) {
+						markanvOvanS.setSelection(i);
+						break;
+					}
+						
+			} else {
+				Log.d("Strand","found no value for marktypovan");
+				markanvOvanS.setSelection(1);
+			}
+			
 			if (py.getHabitat().getRowCount()!=0) {
 				Log.d("Strand","Rows in tableHabitat. Show table. "+py.getHabitat().getRowCount());
 				state = TABLE_VISIBLE;

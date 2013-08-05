@@ -83,9 +83,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="#FFE7BA"
+                android:background="#D9D9F3"
                 android:gravity="center"
-                android:text="Drift" />
+                android:text="Driftvallar" />
 
             <TextView
                 android:id="@+id/deponiT"
@@ -132,12 +132,5 @@
         </LinearLayout>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/vidare_take_pic"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onVidare"
-        android:text="Vidare >"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
+ 
 </LinearLayout>

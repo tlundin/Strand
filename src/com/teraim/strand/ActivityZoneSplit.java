@@ -85,6 +85,9 @@ public class ActivityZoneSplit extends M_Activity {
 	//TRÄD
 	private static final int ID_Tradforekomst = 60;
 	
+	//BUSKAR
+	private static final int ID_Busktackning = 70;
+	
 	
 	
 	
@@ -98,6 +101,9 @@ public class ActivityZoneSplit extends M_Activity {
 	private static final int STATE_HABITAT = 6;
 	private static final int STATE_TRÄD = 7;
 	private static final int STATE_DEPONI = 8;
+	private static final int STATE_BUSKAR = 9;
+	private static final int STATE_DRIFT = 10;
+	
 	
 	
 
@@ -152,7 +158,7 @@ public class ActivityZoneSplit extends M_Activity {
 	
 	
 	protected static final String TypeDigit = "DIGIT";
-	TextView extraT,supraT,geoT,hydroT,övrigtT,habitatT,trädT,deponiT;
+	TextView extraT,supraT,geoT,hydroT,övrigtT,habitatT,trädT,deponiT,buskarT,driftT;
 	LinearLayout bg;
 	private View deponiV = null;
 	private TableDeponi tableDeponi=null;
@@ -184,6 +190,8 @@ public class ActivityZoneSplit extends M_Activity {
 		habitatT = (TextView)this.findViewById(R.id.habitatT);
 		trädT = (TextView)this.findViewById(R.id.tradT);
 		deponiT = (TextView)this.findViewById(R.id.deponiT);
+		buskarT = (TextView)this.findViewById(R.id.buskT);
+		driftT = (TextView)this.findViewById(R.id.driftT);
 
 
 		//Main view that will be filled with variables depending on zone.
@@ -281,6 +289,27 @@ public class ActivityZoneSplit extends M_Activity {
 				goDeponi();
 
 			}});
+		
+
+		buskarT.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				myDisplayState = STATE_BUSKAR;
+				goBuskar();
+
+			}});
+		
+		driftT.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				myDisplayState = STATE_DRIFT;
+				goDrift();
+
+			}});		
 
 		switch (myDisplayState) {
 		case STATE_GEO:
@@ -310,10 +339,37 @@ public class ActivityZoneSplit extends M_Activity {
 		case STATE_DEPONI:
 			goDeponi();
 			break;
+		case STATE_BUSKAR:
+			goBuskar();
+			break;
+			
+		case STATE_DRIFT:
+			goDrift();
+			break;
+
 		}
 	}
 
+
+	protected void goDrift() {
+		bg.removeAllViews();	
+		//Button
+		Intent intent = new Intent(this, ActivityVallar.class);
+		addButton(bg,"Driftvallar",intent);
+	}
 	
+	
+	protected void goBuskar() {
+		bg.removeAllViews();
+		
+		//Klippamax
+		addNormalInput(bg,"Busktäckning","Ange total busktäckning (%)",py.getBusktackning(),ID_Busktackning,InputType.TYPE_CLASS_NUMBER);
+		
+		//Button
+		final Intent intent = new Intent(this,ActivityArterFaltskikt.class);
+		intent.putExtra(Strand.KEY_CURRENT_TABLE, Strand.BUSKAR);	
+		addButton(bg,"Buskarter",intent);
+	}
 	protected void goDeponi() {
 		bg.removeAllViews();
 		if (deponiV == null) {
@@ -420,7 +476,7 @@ public class ActivityZoneSplit extends M_Activity {
 		
 		//BUTTONS
 		addButton(bg,"Substrat",new Intent(this,ActivitySubstratSelection.class));
-
+		addButtonArter();
 	}
 
 
@@ -452,6 +508,7 @@ public class ActivityZoneSplit extends M_Activity {
 
 		addButton(bg,"Substrat",new Intent(this,ActivitySubstratSelection.class));
 
+		addButtonArter();
 	}
 
 
@@ -525,10 +582,18 @@ public class ActivityZoneSplit extends M_Activity {
 
 		//BUTTONS
 		addButton(bg,"Substrat",new Intent(this,ActivitySubstratSelection.class));
+		addButtonArter();
+		
 
 	}
 
 
+	private void addButtonArter() {
+		final Intent intent = new Intent(this,ActivitySelectArt.class);
+		intent.putExtra(Strand.KEY_CURRENT_TABLE, -1);
+		addButton(bg,"Arter",intent);
+
+	}
 
 
 	public TextView getTextView(View v) {
@@ -771,6 +836,10 @@ public class ActivityZoneSplit extends M_Activity {
 		case ID_Stangsel:
 			py.setStangsel(value);
 			break;
+			
+		case ID_Busktackning:
+			py.setBusktackning(value);
+			break;
 		
 		}
 		getTextView(v).setText(value);
@@ -786,11 +855,6 @@ public class ActivityZoneSplit extends M_Activity {
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
-	public void onVidare(View v) {
-		Log.d("Strand","onvidare called");
-		Intent i = new Intent(this, ActivityZoneless.class);
-		startActivity(i);
-	}
 
 
 

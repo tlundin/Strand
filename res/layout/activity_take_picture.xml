@@ -20,10 +20,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:maxLength="3"
+           android:maxLength="3"
             android:ems="3"
             android:inputType="numberDecimal">
-            <requestFocus />
+           
         </EditText>
 
     <ImageButton

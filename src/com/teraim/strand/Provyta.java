@@ -2,8 +2,6 @@ package com.teraim.strand;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import android.text.format.Time;
 import android.util.Log;
 
 import com.teraim.strand.dataobjekt.Table;
@@ -13,12 +11,12 @@ public class Provyta implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4483220563308165836L;
+	private static final long serialVersionUID = 4483220563308165837L;
 	/**
 	 * 
 	 */
 	
-	String brygga,dynerblottadsand,exponering,gpseast,gpsnorth,inventerare,inventeringstyp,orsak,kriteriestrand,kriterieovan,klippamax,
+	String brygga,busktackning,dynerblottadsand,exponering,gpseast,gpsnorth,inventerare,inventeringstyp,orsak,kriteriestrand,kriterieovan,klippamax,
 	kusttyp,lagnummer,lutningextra,lutninggeo,lutningsupra,marktypextra,marktypgeo,marktypsupra,
 	marktypovan,ovanhabitat,provyta,pyID,rekreation,rojning,rojningtid,ruta,riktning,
 	slutlengeo,slutlensupra,slutlenovan,strandtyp,vattendjuppyID, stangsel,tradforekomst,tradtackninggeo,
@@ -26,8 +24,6 @@ public class Provyta implements Serializable {
 	vegtackningfaltextra,vasslen,vattendjup,vasstathet,year;
 	
 
-	private boolean isLocked=false;
-	private boolean isNormal=true;
 
 
 	//Sparar kommentarer.
@@ -63,6 +59,27 @@ public class Provyta implements Serializable {
 	
 	//Tabeller
 	Table träd,buskar,arter,vallar,habitat,dyner,deponi;	
+
+	
+	/**
+	 * @return the busktackning
+	 */
+	public String getBusktackning() {
+		return busktackning;
+	}
+
+	/**
+	 * @param busktackning the busktackning to set
+	 */
+	public void setBusktackning(String busktackning) {
+		saved = false;
+		this.busktackning = busktackning;
+	}
+
+	private boolean isLocked=false;
+	private boolean isNormal=true;
+
+	
 	/**
 	 * @return the deponi
 	 */
@@ -74,6 +91,7 @@ public class Provyta implements Serializable {
 	 * @param deponi the deponi to set
 	 */
 	public void setDeponi(Table deponi) {
+		saved = false;
 		this.deponi = deponi;
 	}
 
@@ -87,7 +105,8 @@ public class Provyta implements Serializable {
 	/**
 	 * @param ovanHabitat the ovanHabitat to set
 	 */
-	public void setOvanHabitat(String ovanHabitat) {
+	public void setOvanHabitat(String ovanhabitat) {
+		saved = false;
 		this.ovanhabitat = ovanhabitat;
 	}
 
@@ -500,6 +519,7 @@ public class Provyta implements Serializable {
 
 	public void setMarktypovan(String marktypovan) {
 		this.marktypovan = marktypovan;
+		Log.d("Strand","Marktypovan was changed to "+marktypovan);
 		saved = false;
 	}
 
