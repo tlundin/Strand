@@ -23,26 +23,9 @@
             android:enabled="false"
             android:inputType="number"
              >
-
-        </EditText>       <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="Antal"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <EditText
-            android:id="@+id/antal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:inputType="number"
-            android:ems="10" >
-
-            <requestFocus />
-        </EditText>
-
+        </EditText>       
+        
+  
 
         <TextView
             android:layout_width="wrap_content"
@@ -60,7 +43,7 @@
             android:ems="10"
             android:inputType="number"
              >
-
+		<requestFocus />
         </EditText>
 
         
@@ -84,4 +67,24 @@
 
             
         </EditText>
+        
+              <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Antal"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/antal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:inputType="number"
+            android:ems="10" >
+
+            
+        </EditText>
+        
 </LinearLayout>

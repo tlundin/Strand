@@ -18,6 +18,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 
 import com.teraim.strand.dataobjekt.InputAlertBuilder;
 import com.teraim.strand.dataobjekt.InputAlertBuilder.AlertBuildHelper;
+import com.teraim.strand.dataobjekt.TableDeponi;
 
 /**
  * 
@@ -37,12 +39,14 @@ public class ActivityZoneSplit extends M_Activity {
 
 
 	//HYDRO
+	private static final int ID_Vattendjup = 3;
 	private static final int ID_Brygga = 4;
 	private static final int ID_Vasslen = 5;
 	private static final int ID_Vasstathet = 6;
 	private static final int ID_VågExponering = 7;
 	private static final int ID_Strandtyp = 8;
 	private static final int ID_Kusttyp = 9;
+	
 	
 	
 
@@ -64,7 +68,6 @@ public class ActivityZoneSplit extends M_Activity {
 	//SUPRA
 	private static final int ID_SlutlenSupra= 30;
 	private static final int ID_LutningSupra= 31;
-	private static final int ID_Vattendjup = 32;
 	private static final int ID_MarktypSupra = 33;
 	private static final int ID_VegtackningsfaltSupra = 34;
 	private static final int ID_TradtackningSupra = 35;
@@ -94,6 +97,8 @@ public class ActivityZoneSplit extends M_Activity {
 	private static final int STATE_OVRIGT= 5;
 	private static final int STATE_HABITAT = 6;
 	private static final int STATE_TRÄD = 7;
+	private static final int STATE_DEPONI = 8;
+	
 	
 
 	private static final ArrayList<String> rekreationsTyper = new ArrayList<String>(Arrays.asList(
@@ -147,8 +152,10 @@ public class ActivityZoneSplit extends M_Activity {
 	
 	
 	protected static final String TypeDigit = "DIGIT";
-	TextView extraT,supraT,geoT,hydroT,övrigtT,habitatT,trädT;
+	TextView extraT,supraT,geoT,hydroT,övrigtT,habitatT,trädT,deponiT;
 	LinearLayout bg;
+	private View deponiV = null;
+	private TableDeponi tableDeponi=null;
 
 	//convenience..
 	Provyta py = Strand.getCurrentProvyta(this);
@@ -158,6 +165,7 @@ public class ActivityZoneSplit extends M_Activity {
 	private List<String> values;
 	private List<String> entries;
 
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -175,13 +183,15 @@ public class ActivityZoneSplit extends M_Activity {
 		övrigtT = (TextView)this.findViewById(R.id.ovrigtT);
 		habitatT = (TextView)this.findViewById(R.id.habitatT);
 		trädT = (TextView)this.findViewById(R.id.tradT);
+		deponiT = (TextView)this.findViewById(R.id.deponiT);
 
 
 		//Main view that will be filled with variables depending on zone.
 		bg = (LinearLayout)this.findViewById(R.id.contentPane);
 
 
-
+		//Table for Depooni
+		tableDeponi = new TableDeponi(this,py.getDeponi());
 
 		extraT.setOnClickListener(new OnClickListener() {
 
@@ -262,6 +272,15 @@ public class ActivityZoneSplit extends M_Activity {
 
 			}});
 
+		deponiT.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				myDisplayState = STATE_DEPONI;
+				goDeponi();
+
+			}});
 
 		switch (myDisplayState) {
 		case STATE_GEO:
@@ -287,11 +306,26 @@ public class ActivityZoneSplit extends M_Activity {
 		case STATE_TRÄD:
 			goTräd();
 			break;
+		
+		case STATE_DEPONI:
+			goDeponi();
+			break;
 		}
 	}
 
 	
+	protected void goDeponi() {
+		bg.removeAllViews();
+		if (deponiV == null) {
+		FrameLayout deponiF;
+		deponiV = LayoutInflater.from(this).inflate(R.layout.deponi, null);
+		deponiF = (FrameLayout)deponiV.findViewById(R.id.deponiF);
+		deponiF.removeAllViews();
+		deponiF.addView(tableDeponi);	
+		}
+		bg.addView(deponiV);
 	
+	}
 	
 	protected void goTräd() {
 		bg.removeAllViews();
@@ -299,7 +333,7 @@ public class ActivityZoneSplit extends M_Activity {
 		//Trädförekomst
 		entries = new ArrayList<String>(Arrays.asList("Trädlös","Enstaka träd","Skog (>2,5 ha)"));
 		values = sequence(entries);
-		addSpinnerInput(bg,"Röjning","Avverkning eller röjning i transekten?",py.getTradforekomst(),ID_Tradforekomst,entries,values);
+		addSpinnerInput(bg,"Trädförekomst","Trädförekomst på öar",py.getTradforekomst(),ID_Tradforekomst,entries,values);
 		
 		
 		
@@ -368,8 +402,6 @@ public class ActivityZoneSplit extends M_Activity {
 		//Lutning 
 		addNormalInput(bg,"Lutning Supralitoral","Ange grader (deg)",py.getLutningsupra(),ID_LutningSupra,InputType.TYPE_CLASS_NUMBER);
 		
-		//Vattendjup
-		addNormalInput(bg,"Vattendjup","Mätt vattendjup 3 m utanför medelvattenlinjen (dm)",py.getVattendjup(),ID_Vattendjup,InputType.TYPE_CLASS_NUMBER);
 
 		//Marktyp supra
 		entries = markTyper;
@@ -383,7 +415,7 @@ public class ActivityZoneSplit extends M_Activity {
 		addNormalInput(bg,"Total trädtäckning Supralitoral","Total täckning av trädskiktet i Supralitoralen (%)",py.getTradtackningsupra(),ID_TradtackningSupra,InputType.TYPE_CLASS_NUMBER);
 		
 		//SlutLängd Supra
-		addNormalInput(bg,"Supralitoral gräns","Ange zonens slut (m)",py.getSlutlensupra(),ID_SlutlenSupra,InputType.TYPE_CLASS_NUMBER);
+		addNormalInput(bg,"Supralitoral slutlängd","Ange zonens slut (m)",py.getSlutlensupra(),ID_SlutlenSupra,InputType.TYPE_NUMBER_FLAG_DECIMAL);
 		
 		
 		//BUTTONS
@@ -414,7 +446,7 @@ public class ActivityZoneSplit extends M_Activity {
 		addNormalInput(bg,"Total trädtäckning","Total täckning av trädskiktet i Geolitoralen (%)",py.getTradtackninggeo(),ID_TradtackningGeo,InputType.TYPE_CLASS_NUMBER);
 		
 		//SlutLängd 
-		addNormalInput(bg,"Slutlängd Geo","Avstånd längs transekten från medelvattenlinjen till där geolittoralen slutar (dm)",py.getSlutlengeo(),ID_SlutlenGeo,InputType.TYPE_CLASS_NUMBER);
+		addNormalInput(bg,"Geolitoral slutlängd","Avstånd längs transekten från medelvattenlinjen till där geolittoralen slutar (dm)",py.getSlutlengeo(),ID_SlutlenGeo,InputType.TYPE_NUMBER_FLAG_DECIMAL);
 		
 		//BUTTONS
 
@@ -449,6 +481,8 @@ public class ActivityZoneSplit extends M_Activity {
 		values = sequence(entries);
 		addSpinnerInput(bg,"Kusttyp","Ange om provytan ligger på:",py.getKusttyp(),ID_Kusttyp,entries,values);
 	
+		//Vattendjup
+		addNormalInput(bg,"Vattendjup","Mätt vattendjup 3 m utanför medelvattenlinjen (dm)",py.getVattendjup(),ID_Vattendjup,InputType.TYPE_CLASS_NUMBER);
 
 		
 		//BUTTONS
@@ -486,7 +520,7 @@ public class ActivityZoneSplit extends M_Activity {
 		addNormalInput(bg,"Trädtäckning Extralitoral","Total täckning av trädskiktet i Extralitoralen (%)",py.getTradtackningextra(),ID_TradtackningExtra,InputType.TYPE_CLASS_NUMBER);
 
 		//SlutLängd Extralitoral
-		addNormalInput(bg,"Extralitoral gräns","Ange metertal där Extralitoralen slutar (m)",py.getSlutlenovan(),ID_SlutlenOvan,InputType.TYPE_NUMBER_FLAG_DECIMAL);
+		addNormalInput(bg,"Extralitoral slutlängd","Ange metertal där Extralitoralen slutar (m)",py.getSlutlenovan(),ID_SlutlenOvan,InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
 
 		//BUTTONS

@@ -37,7 +37,7 @@ public class TableArter extends TableBase {
 	@Override
 	public void addRow(String name) {
 
-		String[] entries = new String[4];
+		String[] entries = new String[5];
 		entries[0]=name;
 		entries[1]="";
 		entries[2]="";
@@ -63,7 +63,7 @@ public class TableArter extends TableBase {
 		assert(row!=null);
 
 		int i=0;
-		for(int id:inputviews) 
+		for(int id:columnIds) 
 			((TextView)row.findViewById(id)).setText(entries[i++]);
 
 		row.setTag(myID);	
@@ -74,6 +74,7 @@ public class TableArter extends TableBase {
 		ArtListaProvider ap = Strand.getArtListaProvider();
 		final ArtListEntry ale = (ap!=null)?ap.getArt(entries[0]):null;
 		if (ale==null || ale.isExistence()) {
+			Log.d("Strand","Entries0 : "+entries[0]);
 			if (ale == null)
 				Log.e("Strand", "Could not find ART in TableArter. ALE was null");
 			row.setOnClickListener(
@@ -111,6 +112,7 @@ public class TableArter extends TableBase {
 								((TextView)row.findViewById(id)).setText(etss.get(i));
 								i++;
 							}
+							Log.d("Strand","Entries0x : "+entries[0]);
 							etss.add(0,entries[0]);
 							myData.saveRow(myID,etss);
 							

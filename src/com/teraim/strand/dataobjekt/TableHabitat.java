@@ -166,18 +166,18 @@ public class TableHabitat extends TableBase {
 
 	public void recalculateDistances() {
 		Set<Entry<String, String[]>> t = myData.getTable();
-		int prevSlut = 0;
+		float prevSlut = 0;
 		for(Entry<String, String[]>e:t) {
 			String[] val = e.getValue();
 			if (val!=null) {
 				String slut = val[ActivityHabitat.SLUT_KOLUMN_NO];
 				String start = val[ActivityHabitat.START_KOLUMN_NO];
-				int sluti = (slut!=null&&slut.length()>0)?Integer.parseInt(slut):0;
-				int starti = (start!=null&&start.length()>0)?Integer.parseInt(start):0;
+				float sluti = Strand.getFloat(slut);
+				float starti = Strand.getFloat(start);
 				if (prevSlut!=starti){
 					//Shift if wrong
 					Log.d("Strand","Found row where SlutPrev != Startcurrent: "+prevSlut+" "+starti);
-					int dif = sluti-starti;
+					float dif = sluti-starti;
 					//if start bigger than slut, try using old prevslut.
 					if (dif<0) {
 						starti = prevSlut;
@@ -191,8 +191,8 @@ public class TableHabitat extends TableBase {
 						Log.d("Strand","Start i was bigger than sluti...");
 						continue;
 					}
-					val[ActivityHabitat.SLUT_KOLUMN_NO]=Integer.toString(sluti);
-					val[ActivityHabitat.START_KOLUMN_NO]=Integer.toString(starti);
+					val[ActivityHabitat.SLUT_KOLUMN_NO]=Float.toString(sluti);
+					val[ActivityHabitat.START_KOLUMN_NO]=Float.toString(starti);
 
 				}
 				prevSlut = sluti;
@@ -225,8 +225,8 @@ public class TableHabitat extends TableBase {
 	
 	public void setDynHabLen(String length) {
 		String slut = getDynHabSlut();
-		int s = (slut!=null && slut.length()>0)?Integer.parseInt(slut):0;
-		int l = (length!=null && length.length()>0)?Integer.parseInt(length):0;
+		float s = Strand.getFloat(slut);
+		float l = Strand.getFloat(length);
 		setDynHabSlut(String.valueOf(s+l));
 	}
 	//Dynhablength is the sum of all lengths in the dynTable.

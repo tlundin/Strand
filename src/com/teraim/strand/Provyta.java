@@ -1,7 +1,10 @@
 package com.teraim.strand;
 
 import java.io.Serializable;
-import java.util.Calendar;
+import java.util.Date;
+
+import android.text.format.Time;
+import android.util.Log;
 
 import com.teraim.strand.dataobjekt.Table;
 
@@ -10,7 +13,7 @@ public class Provyta implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4483220563308165832L;
+	private static final long serialVersionUID = 4483220563308165836L;
 	/**
 	 * 
 	 */
@@ -21,6 +24,119 @@ public class Provyta implements Serializable {
 	slutlengeo,slutlensupra,slutlenovan,strandtyp,vattendjuppyID, stangsel,tradforekomst,tradtackninggeo,
 	tradtackningsupra,tradtackningextra,vegtackningfaltgeo,vegtackningfaltsupra,
 	vegtackningfaltextra,vasslen,vattendjup,vasstathet,year;
+	
+
+	private boolean isLocked=false;
+	private boolean isNormal=true;
+
+
+	//Sparar kommentarer.
+	String blålapp;
+
+	/**
+	 * @return the blålapp
+	 */
+	public String getBlålapp() {
+		return blålapp;
+	}
+
+	/**
+	 * @param blålapp the blålapp to set
+	 */
+	public void setBlålapp(String blålapp) {
+		saved = false;
+		this.blålapp = blålapp;
+	}
+
+	//Räknare för default.
+	int driftVallsC = 1;
+
+	public int getDriftVallsC() {
+		return driftVallsC++;
+	}
+
+	//Sweref koordinater markerad start.
+	double startPEast,startPNorth;
+	
+	//Starttid för mätning
+	Date mätstart;
+	
+	//Tabeller
+	Table träd,buskar,arter,vallar,habitat,dyner,deponi;	
+	/**
+	 * @return the deponi
+	 */
+	public Table getDeponi() {
+		return deponi;
+	}
+
+	/**
+	 * @param deponi the deponi to set
+	 */
+	public void setDeponi(Table deponi) {
+		this.deponi = deponi;
+	}
+
+	/**
+	 * @return the ovanHabitat
+	 */
+	public String getOvanHabitat() {
+		return ovanhabitat;
+	}
+
+	/**
+	 * @param ovanHabitat the ovanHabitat to set
+	 */
+	public void setOvanHabitat(String ovanHabitat) {
+		this.ovanhabitat = ovanhabitat;
+	}
+
+	//Matris
+	String[][] substrat;
+	
+	/**
+	 * @return the substrat
+	 */
+	public String[][] getSubstrat() {
+		return substrat;
+	}
+
+	//Flagga om ändring gjorts.
+	boolean saved = false;
+	
+	
+	public boolean isLocked() {
+		return isLocked;
+	}
+	
+	public boolean isSaved() {
+		return saved;
+	}
+	
+	//This is true if provyta is set as 'inventeras ej'
+		public boolean isNormal() {
+			return isNormal;
+	}
+		
+	
+	
+	public void setSaved(boolean s) {
+		saved = s;
+	}
+	
+	//Toggla lås för ändringar.
+	public void setLocked(boolean isLocked) {
+		this.isLocked = isLocked;
+	}
+
+	
+
+
+	
+	public String getpyID() {
+		return pyID;
+	}
+	
 	
 	/**
 	 * @return the dynerblottadsand
@@ -142,100 +258,6 @@ public class Provyta implements Serializable {
 		this.tradtackningsupra = tradtackningsupra;
 	}
 
-	private boolean isLocked=false;
-	private boolean isNormal=true;
-
-
-	//Sparar kommentarer.
-	String blålapp;
-
-	/**
-	 * @return the blålapp
-	 */
-	public String getBlålapp() {
-		return blålapp;
-	}
-
-	/**
-	 * @param blålapp the blålapp to set
-	 */
-	public void setBlålapp(String blålapp) {
-		saved = false;
-		this.blålapp = blålapp;
-	}
-
-	//Räknare för default.
-	int driftVallsC = 1;
-
-	public int getDriftVallsC() {
-		return driftVallsC++;
-	}
-
-	//Sweref koordinater markerad start.
-	double startPEast,startPNorth;
-	
-	//Tabeller
-	Table träd,buskar,arter,vallar,habitat,dyner;	
-	/**
-	 * @return the ovanHabitat
-	 */
-	public String getOvanHabitat() {
-		return ovanhabitat;
-	}
-
-	/**
-	 * @param ovanHabitat the ovanHabitat to set
-	 */
-	public void setOvanHabitat(String ovanHabitat) {
-		this.ovanhabitat = ovanhabitat;
-	}
-
-	//Matris
-	String[][] substrat;
-	
-	/**
-	 * @return the substrat
-	 */
-	public String[][] getSubstrat() {
-		return substrat;
-	}
-
-	//Flagga om ändring gjorts.
-	boolean saved = false;
-	
-	
-	public boolean isLocked() {
-		return isLocked;
-	}
-	
-	public boolean isSaved() {
-		return saved;
-	}
-	
-	//This is true if provyta is set as 'inventeras ej'
-		public boolean isNormal() {
-			return isNormal;
-	}
-		
-	
-	
-	public void setSaved(boolean s) {
-		saved = s;
-	}
-	
-	//Toggla lås för ändringar.
-	public void setLocked(boolean isLocked) {
-		this.isLocked = isLocked;
-	}
-
-	
-
-
-	
-	public String getpyID() {
-		return pyID;
-	}
-	
 	
 	/**
 	 * @return the lutningextra
@@ -776,15 +798,28 @@ public class Provyta implements Serializable {
 		pyID = _pyID;
 		//Create empty tables..
 		träd = new Table(4,this);
-		arter = new Table(4,this);
+		arter = new Table(5,this);
 		buskar = new Table(5,this);
 		vallar = new Table(12,this);
 		habitat = new Table(6,this);
 		dyner = new Table(5,this);
-		
+		deponi = new Table(2,this);
+		//init deponi with static rows.
+		deponi.saveRow(deponi.getNextId(), "Tång","0");
+		deponi.saveRow(deponi.getNextId(), "Gren/kvist/ved","0");
+		deponi.saveRow(deponi.getNextId(), "Annan vegetation","0");
+		deponi.saveRow(deponi.getNextId(), "Plast","0");
+		deponi.saveRow(deponi.getNextId(), "Oljespill","0");
+		deponi.saveRow(deponi.getNextId(), "Byggavfall","0");
+		deponi.saveRow(deponi.getNextId(), "Grävmassor","0");		
+		deponi.saveRow(deponi.getNextId(), "Sten","0");
+		deponi.saveRow(deponi.getNextId(), "Metallskrot","0");
+		deponi.saveRow(deponi.getNextId(), "Övrigt","0");	
 		blålapp="";
 		saved = false;
 		isNormal = true;
+		mätstart = new Date();
+		Log.d("Start","Mätstart "+mätstart.toString());
 	}
 
 	/**

@@ -115,14 +115,14 @@ public class TableDynHabitat extends TableBase {
 							i++;
 						}
 						
-						int oldL = 0;
+						float oldL = 0;
 						String[] rowD=myData.getRow(myID);
 						if (rowD!=null) 
 							oldL=Strand.getInt(rowD[LANGD_KOLUMN]);
 						else
 							Log.d("Strand","rowD was null for ID "+myID+" rowcount "+myData.getRowCount());
 						
-						int newL = Strand.getInt(ets.get(LANGD_KOLUMN));				
+						float newL = Strand.getFloat(ets.get(LANGD_KOLUMN));				
 						myData.saveRow(myID,ets);
 						
 						tableH.setDynHabLen(String.valueOf(newL-oldL));
@@ -137,9 +137,9 @@ public class TableDynHabitat extends TableBase {
 				Log.d("Strand","This gets fired");
 				//need to also subtract the distance from all other rows.
 				TextView tv= (TextView)row.findViewById(R.id.langd);
-				int len = 0;
+				float len = 0;
 				if(tv.getText()!=null && tv.getText().length()>0) 
-					len = Integer.parseInt(tv.getText().toString());
+					len = Float.parseFloat(tv.getText().toString());
 				Log.d("Strand","Removed row with len "+len);
 				tableH.setDynHabLen(String.valueOf(-len));
 				

@@ -33,7 +33,7 @@ public class Table implements Serializable {
 
 		if (entries.length == noOfCols) {
 			rowlist.put(id, entries);
-			Log.d("Strand","Added row of data to table eith id"+ id);
+			Log.d("Strand","Added row of data to table with id"+ id+" and name "+entries[0]);
 			mama.setSaved(false);
 		}
 		else

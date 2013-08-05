@@ -3,7 +3,6 @@ package com.teraim.strand;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -15,7 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -34,9 +33,13 @@ public class ActivitySubstratSelection extends M_Activity {
 		"Organiskt", "G", "H", "I", "J",
 		"Lera", "L", "M", "N", "O",
 		"Sand", "Q", "R", "S", "T",
+		"Grus", "Q", "R", "S", "T",
+		"Sten", "Q", "R", "S", "T",
 		"Block", "V", "W", "X", "Y",
+		"Häll", "Q", "R", "S", "T",
+		"Artificiell","Q", "R", "S", "T",
 		"SUM:","","","",""};
-
+	
 	private int col=-1,sum=-1; 
 
 	//need a flag to keep track of timers..
@@ -45,9 +48,10 @@ public class ActivitySubstratSelection extends M_Activity {
 
 
 	static final int NO_OF_COLS  = 5;
-	static final int NO_OF_ROWS  = 5;
+	static final int NO_OF_ROWS  = 9;
 	
-	static final int LENGTH_OF_COLS  = 6;
+	//TODO: get rid of this one..
+	static final int LENGTH_OF_COLS  = NO_OF_ROWS+1;
 
 
 	@Override
@@ -69,7 +73,7 @@ public class ActivitySubstratSelection extends M_Activity {
 			for (int c=0;c<(NO_OF_COLS-1);c++) {
 				row = values[c];
 				for (int j=0;j<(LENGTH_OF_COLS-2);j++)
-					row[j] = "["+c+","+j+"]";
+					row[j] = "0";
 			}
 			py.setSubstrat(values);
 		}
@@ -91,19 +95,18 @@ public class ActivitySubstratSelection extends M_Activity {
 					final int position, long id) {
 				//check if col = 0. If so - exit, since it is not part of the clickables..
 				col = position%NO_OF_COLS;
+				sum = 0;
 				if (col==0) 
 					return;				
-				Toast.makeText(getApplicationContext(),
-						((TextView) v).getText(), Toast.LENGTH_SHORT).show();
 				//On click, create dialog 			
 				AlertDialog.Builder alert = new AlertDialog.Builder(v.getContext());
 				alert.setTitle(zones[col-1]);
 				alert.setMessage("Värdet i kolumnerna skall sammanlagt uppnå 100");
-				final LinearLayout et = (LinearLayout)LayoutInflater.from(ActivitySubstratSelection.this).inflate(R.layout.edit_text, null);
+				final ScrollView et = (ScrollView)LayoutInflater.from(ActivitySubstratSelection.this).inflate(R.layout.edit_text, null);
 				alert.setView(et);
 				final TextView summa = (TextView)et.findViewById(R.id.sum);
-				final int sb[] = {R.id.sb1,R.id.sb2,R.id.sb3,R.id.sb4};
-				final SeekBar SB[] = new SeekBar[4];
+				final int sb[] = {R.id.sb1,R.id.sb2,R.id.sb3,R.id.sb4,R.id.sb5,R.id.sb6,R.id.sb7,R.id.sb8};
+				final SeekBar SB[] = new SeekBar[8];
 
 				int i=0;
 				for(int ide:sb) 
@@ -185,7 +188,7 @@ public class ActivitySubstratSelection extends M_Activity {
 					currSBValue.put(seekbar.getId(),0);
 					seekbar.setOnSeekBarChangeListener( new OnSeekBarChangeListener()
 					{
-						private long INITIAL_DELAY = 1500;
+						private long INITIAL_DELAY = 2000;
 						public void onProgressChanged(SeekBar seekBar, int progress,
 								boolean fromUser)
 						{
@@ -228,7 +231,7 @@ public class ActivitySubstratSelection extends M_Activity {
 						//((TextView) v).setText(et.getText());
 						int elem = -1;
 						//Iterate through all rows
-						for(int i=1;i<=4;i++) {
+						for(int i=1;i<=NO_OF_ROWS-1;i++) {
 							elem = col+i*NO_OF_COLS;
 							if (elem > fields.length)
 								Log.e("Strand","Elem out of bounds: "+elem);

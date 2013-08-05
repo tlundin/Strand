@@ -59,7 +59,7 @@ public class ActivityMain extends Activity {
 	private final static String ny = "Status: Ny";
 	private final static String klar = "Status: Markerad klar";
 
-	private final static String[] altArray = {"Inventera","Markera klar","Inventeras ej"};
+	private final static String[] altArray = {"Inventera","Avståndsinventera","Markera klar","Inventera ej"};
 
 
 	@Override
@@ -72,7 +72,7 @@ public class ActivityMain extends Activity {
 		initIfFirstTime();
 		//Load the input data.
 		//For now, load from resources.
-		InputStream is = getResources().openRawResource(R.raw.data2);
+		InputStream is = getResources().openRawResource(R.raw.data3);
 		assert(is !=null);
 		//This call will parse the input file and create a singleton data object that can be used statically.
 		StrandInputData.parseInputFile(is);
@@ -205,25 +205,28 @@ public class ActivityMain extends Activity {
 		//If object already exist, offer Edit button. Else, offer Create
 
 
-		if (py !=null) {        			
+		if (py !=null) {
+			String metod = (py.getInventeringstyp()!=null)?"  ("+py.getInventeringstyp()+")":"";
+				
 			if(py.isLocked()) {
 				expressionMark.setTextColor(Color.RED);
 				expressionMark.setText("!");
-				exprMessage.setText(klar);
+				exprMessage.setText(klar+metod);
 
 			}
 			else {
 				expressionMark.setTextColor(Color.BLUE);       				
 				expressionMark.setText("!");
-				exprMessage.setText(påbörjad);
+				exprMessage.setText(påbörjad+metod);
 			}
+			
 		} else {
 			expressionMark.setTextColor(Color.GREEN);
 			expressionMark.setText("\u2713");
 			exprMessage.setText(ny);     				    			
 		}
 
-
+		
 	}
 
 
@@ -245,6 +248,7 @@ public class ActivityMain extends Activity {
 		int selected = alternativSpinner.getSelectedItemPosition();
 		switch(selected) {
 		case 0:
+		case 1:
 			if (py!=null) {
 				if (py.isLocked()) {
 					DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -268,33 +272,23 @@ public class ActivityMain extends Activity {
 					.setNegativeButton("Nej", dialogClickListener).show();
 
 				} else if (!py.isNormal()) {
-					py = new Provyta(pyID);	 
-					//save globals into the new provyta.
-					py.setLagnummer(etLag.getText().toString());
-					Log.d("Strand","Lagnummer set to "+etLag.getText().toString());
-					py.setRuta((String)rutSpinner.getSelectedItem());
-					py.setProvyta( (String)ytSpinner.getSelectedItem());
-					py.setInventerare( etInv.getText().toString());
+					createNew(selected);
 					begin();				}				
-				else
+				else {
+					py.setInventeringstyp((selected == 0)?"normal":"distans");
 					begin();
+				}
 
 			} 	else {
 				assert(pyID != null);
-				py = new Provyta(pyID);	 
-				//save globals into the new provyta.
-				py.setLagnummer(etLag.getText().toString());
-				Log.d("Strand","Lagnummer set to "+etLag.getText().toString());
-				py.setRuta((String)rutSpinner.getSelectedItem());
-				py.setProvyta( (String)ytSpinner.getSelectedItem());
-				py.setInventerare( etInv.getText().toString());
+				createNew(selected);
 				begin();
 			}
 
 			break;
 
 
-		case 1:
+		case 2:
 			//Markera klar.
 			if (py!=null) {
 				if(!py.isLocked()) {
@@ -314,7 +308,7 @@ public class ActivityMain extends Activity {
 			}
 			break;
 			//Inventeras ej.
-		case 2:
+		case 3:
 			if (py!=null) {
 				if (py.isNormal()) {
 					DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -355,9 +349,20 @@ public class ActivityMain extends Activity {
 		py.setRuta((String)rutSpinner.getSelectedItem());
 		py.setProvyta( (String)ytSpinner.getSelectedItem());
 		py.setInventerare( etInv.getText().toString());
-		
+		py.setInventeringstyp("ej inventerad");
 	}
 	
+	
+	private void createNew(int selected) {
+		py = new Provyta(pyID);	 
+		py.setInventeringstyp((selected == 0)?"normal":"distans");
+		//save globals into the new provyta.
+		py.setLagnummer(etLag.getText().toString());
+		Log.d("Strand","Lagnummer set to "+etLag.getText().toString());
+		py.setRuta((String)rutSpinner.getSelectedItem());
+		py.setProvyta( (String)ytSpinner.getSelectedItem());
+		py.setInventerare( etInv.getText().toString());
+	}
 	
 	private void begin() {
 

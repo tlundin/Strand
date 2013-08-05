@@ -5,7 +5,6 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -15,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -79,12 +79,16 @@ public class ActivityTakePicture extends M_Activity implements LocationListener 
 
 		final Intent i = new Intent(this, ActivityZoneSplit.class);
 
+		final EditText riktning = (EditText)this.findViewById(R.id.riktning);
 		vidare.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				py.setRiktning(riktning.getText().toString());
 				startActivity(i);
 			}});
 
+		riktning.setText(py.getRiktning());
+		
 	}
 
 	@Override

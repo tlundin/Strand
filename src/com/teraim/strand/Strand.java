@@ -163,6 +163,11 @@ public class Strand {
 		return s!=null&&s.length()>0?Integer.parseInt(s):0;				
 	}
 
+	public static float getFloat(String s) {
+		return s!=null&&s.length()>0?Float.parseFloat(s):0;				
+
+	}
+
 
 
 }
